@@ -1,0 +1,14 @@
+yarn.lock
+src/
+*.ts
+*.tsx
+tsconfig.*
+*.config.json
+*.config.js
+*.cjs
+package-lock.json
+package.json
+cypress/**
+cypress.env.json
+email_templates/**
+node_modules
