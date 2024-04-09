@@ -1,50 +1,51 @@
-<div class='max-w-md'>
-    <h1 class='text-5xl my-4'>{{ section.settings.title }}</h1>
-    <p class='text-base md:text-xl leading-normal'>{{ section.settings.subtext_title }}</p>
-    <div class='my-4'>
-        {% if section.settings.button_url == blank %}
-            {% assign shop_url = shop.secure_url %}
-        {% else %}
-            {% assign shop_url = section.settings.button_url %}
-        {% endif %}
+<div class="max-w-md">
+  <h1 class="text-5xl my-4">{{ section.settings.title }}</h1>
+  <p class="text-base md:text-xl leading-normal">{{ section.settings.subtext_title }}</p>
+  <div class="my-4">
+    {% if section.settings.button_url == blank %}
+      {% assign shop_url = shop.secure_url %}
+    {% else %}
+      {% assign shop_url = section.settings.button_url %}
+    {% endif %}
 
-        <a href='{{ shop_url }}'
-            class='px-4 py-2 rounded-lg inline text-base font-medium shadow bg-orange-600 text-white hover:bg-orange-700'
-        >
-            {{ section.settings.button_label }}
-        </a>
-    </div>
+    <a
+      href="{{ shop_url }}"
+      class="px-4 py-2 rounded-lg inline text-base font-medium shadow bg-orange-600 text-white hover:bg-orange-700"
+    >
+      {{ section.settings.button_label }}
+    </a>
+  </div>
 </div>
 
 {% schema %}
 {
-    "name": "Template 404",
-    "tag": "section",
-    "class": "flex items-center justify-center text-center py-10",
-    "settings": [
-        {
-            "type": "text",
-            "id": "title",
-            "default": "404",
-            "label": "404 Heading Title"
-        },
-        {
-            "type": "text",
-            "id": "subtext_title",
-            "default": "The page you were looking for does not exist",
-            "label": "404 Subtext"
-        },
-        {
-            "type": "text",
-            "id": "button_label",
-            "label": "Button Label",
-            "default": "Back to Homepage"
-        },
-        {
-            "type": "url",
-            "id": "button_url",
-            "label": "Button URL"
-        }
-    ]
+  "name": "Template 404",
+  "tag": "section",
+  "class": "flex items-center justify-center text-center py-10",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "404",
+      "label": "404 Heading Title"
+    },
+    {
+      "type": "text",
+      "id": "subtext_title",
+      "default": "The page you were looking for does not exist",
+      "label": "404 Subtext"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Back to Homepage"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    }
+  ]
 }
 {% endschema %}
