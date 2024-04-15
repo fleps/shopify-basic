@@ -1,0 +1,23 @@
+{
+  "name": "Cart Template",
+  "sections": {
+    "template": {
+      "type": "template-cart",
+      "blocks": {
+        "update-button": {
+          "type": "update_button"
+        },
+        "checkout-button": {
+          "type": "checkout_button"
+        }
+      },
+      "block_order": [
+        "update-button",
+        "checkout-button"
+      ]
+    }
+  },
+  "order": [
+    "template"
+  ]
+}

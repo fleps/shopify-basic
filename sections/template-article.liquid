@@ -22,17 +22,7 @@
           }}
         {% endif %}
       {% when 'article_info', %}
-        <div class='flex justify-between'>
-          {% if section.settings.show_published_date %}
-            <time datetime='{{ article.published_at |  date: '%Y-%m-%d' }}'>
-              {{ article.published_at |  date: '%b %d %Y' }}
-            </time>
-          {% endif %}
-
-          {% if section.settings.show_author %}
-            <small>by {{ article.author }}</small>
-          {% endif %}
-        </div>
+        {% render 'article-info', section: section, article: article %}
       {% when 'article_content' %}
         <div class='py-5'>
           {{ article.content }}
@@ -47,8 +37,9 @@
   <div class='max-w-6xl p-5 container mx-auto'>
     <div class='px-3 pb-8 border-t border-t-gray-300'>
       {% if article.comments_count > 0 %}
-        <h3 class='text-xl pt-5 font-medium mb-b'>Post Comments</h1>
-        {% paginate article.comments by 5 %}
+        <h3 class='text-xl pt-5 font-medium mb-b'>Post Comments</h3>
+
+        {% paginate article.comments by 10 %}
           {% for comment in article.comments %}
             <div class='flex-1 border my-4 py-2 sm:px-6 sm:py-4 leading-relaxed'>
               <span class='comment-author'>
@@ -62,9 +53,9 @@
               </p>
             </div>
           {% endfor %}
-          {% if paginate.pages > 1 %}
-            {{ paginate | default_pagination }}
-          {% endif %}
+
+          {% render 'pagination', paginate: paginate %}
+
         {% endpaginate %}
       {% else %}
         There are no Comments in this article
@@ -155,20 +146,6 @@
 {% schema %}
 {
   "name": "Article Template",
-  "settings": [
-    {
-      "type": "checkbox",
-      "id": "show_author",
-      "default": true,
-      "label": "Display Author Name"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_published_date",
-      "default": true,
-      "label": "Display Publlished Date"
-    }
-  ],
   "blocks": [
     {
       "type": "article_title",
@@ -177,7 +154,17 @@
     },
     {
       "type": "article_info",
-      "name": "Author and Date",
+      "name": "Author and Date Block",
+      "limit": 1
+    },
+    {
+      "type": "article_date",
+      "name": "Article Date",
+      "limit": 1
+    },
+    {
+      "type": "article_author",
+      "name": "Article Author",
       "limit": 1
     },
     {

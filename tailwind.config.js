@@ -2,7 +2,10 @@
 module.exports = {
   content: [
     './src/**/*.js',
-    './**/*.{liquid,json}'
+    './layout/*.{liquid,json}',
+    './sections/*.{liquid,json}',
+    './snippets/*.{liquid,json}',
+    './templates/**/*.{liquid,json}'
   ],
   theme: {
     extend: {},

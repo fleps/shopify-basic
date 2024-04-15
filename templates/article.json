@@ -13,6 +13,12 @@
         "info": {
           "type": "article_info"
         },
+        "date": {
+          "type": "article_date"
+        },
+        "author": {
+          "type": "article_author"
+        },
         "content": {
           "type": "article_content"
         }
@@ -21,11 +27,10 @@
         "title",
         "image",
         "info",
+        "date",
+        "author",
         "content"
-      ],
-      "settings": {
-        "": ""
-      }
+      ]
     }
   },
   "order": [

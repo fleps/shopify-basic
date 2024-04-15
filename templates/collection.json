@@ -1,0 +1,14 @@
+{
+  "name": "Collection Template",
+  "sections": {
+    "template": {
+      "type": "template-collection",
+      "settings": {
+        "": ""
+      }
+    }
+  },
+  "order": [
+    "template"
+  ]
+}

@@ -1,0 +1,16 @@
+<div class='flex justify-between'>
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'article_date' %}
+        <time datetime='{{ article.published_at |  date: ' %Y-%m-%d' }}'>
+          {{ article.published_at | date: '%b %d %Y' }}
+        </time>
+
+      {% when 'article_author' %}
+        <small>by {{ article.author }}</small>
+      {% else %}
+
+    {% endcase %}
+  {% endfor %}
+
+</div>
