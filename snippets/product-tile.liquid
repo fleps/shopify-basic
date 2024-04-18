@@ -1,0 +1,44 @@
+<div class='bg-[#f2f2f2] shadow-lg rounded-b-lg group flex'>
+  <a href="{{ product.url }}" class='flex flex-col'>
+    <div class='overflow-hidden m-1 aspect-square bg-white flex items-end'>
+      {% if product.featured_image %}
+        {{ product.featured_image
+          | image_url: width: 400
+          | image_tag:
+            class: 'object-fill transition-transform group-hover:scale-105',
+            alt: product.featured_image.alt | escape
+        }}
+      {% else %}
+        {{ 'product-2' | placeholder_svg_tag: 'w-full h-full object-cover transition-transform group-hover:scale-105' }}
+      {% endif %}
+    </div>
+    <div class='py-4 px-3 md:px-6 flex flex-col flex-1'>
+      <h2 class='font-medium text-sm capitalize text-gray-500'>
+        {%- assign toRemove = product.vendor | append: ' | ' -%}
+        {{ product.title | remove: toRemove | capitalize }}
+      </h2>
+      <div class='flex justify-between items-baseline mt-auto mb-0'>
+        <span class='text-xs'>
+          {% if product.available %}
+          In Stock
+          {% else %}
+          <span class='font-medium text-red-600'>Sold out</span>
+          {% endif %}
+        </span>
+        <div class='flex items-center relative'>
+          {% if product.compare_at_price %}
+            <span class='text-gray-500 line-through mr-2 text-xs'>{{ product.compare_at_price | money }}</span>
+            <span class='text-lg font-medium text-red-600'>{{ product.price | money }}</span>
+          {% else %}
+            <span class='text-lg font-medium'>{{ product.price | money }}</span>
+          {% endif %}
+          {% if product.compare_at_price %}
+            <span class='absolute -right-[27px] -bottom-8 md:-right-10'>
+              {% render 'icon-sale' %}
+            </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </a>
+</div>

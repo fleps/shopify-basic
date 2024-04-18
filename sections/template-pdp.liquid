@@ -1,0 +1,292 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<div class="max-w-7xl p-5 container mx-auto">
+  <div class="flex flex-wrap gap-4 relative">
+    <div class="product--medias w-screen max-md:-mx-5 md:w-1/2 lg:flex-1">
+      <div class="swiper select-none max-w-full">
+        <div class="swiper-wrapper">
+          {% for media in product.media %}
+            <div class="h-100 lg:h-auto overflow-hidden swiper-slide">
+              {% render 'product-media', media: media %}
+            </div>
+          {% endfor %}
+        </div>
+        <div class="swiper-button-prev lg:!hidden"></div>
+        <div class="swiper-button-next lg:!hidden"></div>
+      </div>
+    </div>
+    <div class="product--content flex-1 lg:flex-none lg:w-[400px] sticky top-5 h-fit z-10">
+      {% form 'product', product %}
+        {% assign current_variant = product.selected_or_first_available_variant %}
+        <input type='hidden' name='id' value='{{ current_variant.id }}'/>
+
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'vendor' %}
+              <span class='text-xs text-gray-500 font-medium mb-3'>{{ product.vendor }}</span>
+
+              {% when 'title' %}
+              <h1 class='text-2xl font-medium text-gray-900 mb-3'>
+                {{ product.title }}
+              </h1>
+
+            {% when 'price' %}
+              {%- assign isOnSale = false -%}
+
+              {%- if current_variant.compare_at_price > current_variant.price -%}
+                {%- assign isOnSale = true -%}
+              {%- endif -%}
+
+              <div class='mb-3 flex items-center'>
+                <span class='text-gray-500 line-through mr-2 {% unless isOnSale %} hidden {% endunless %}' id='strike-price'>
+                  {{ current_variant.compare_at_price | money }}
+                </span>
+                <span
+                  class='text-lg font-medium'
+                  data-currency-symbol='{{ cart.currency.symbol }}'
+                  id='current-price'>
+                  {{ current_variant.price | money }}
+                </span>
+                <span class='ml-2 -mb-4 {% unless isOnSale %} hidden {% endunless %}' id='sale-badge'>
+                  {% render 'icon-sale' %}
+                </span>
+              </div>
+            {% when 'variants_options' %}
+
+              {% unless product.has_only_default_variant %}
+                <variant-selector
+                  data-url='{{ product.url }}'
+                  data-section='{{ section.id }}'
+                  data-variants='{{ product.variants | json }}'
+                  data-is-reversed='{{ block.settings.reverse_options }}'
+                >
+                  {% if block.settings.reverse_options %}
+                    {% for option in product.options_with_values reversed %}
+                      {% render 'pdp-options', option: option %}
+                    {% endfor %}
+                  {% else %}
+                    {% for option in product.options_with_values %}
+                      {% render 'pdp-options', option: option %}
+                    {% endfor %}
+                  {% endif %}
+                </variant-selector>
+              {% endunless %}
+
+            {% when 'atc_block' %}
+              <div class='mb-3 flex items-center'>
+                <input type="number" id="Quantity" name="quantity" value="1" min="1" class='border pl-4 py-2 w-[50px] mr-2'>
+                {% assign isAvailable = current_variant.available %}
+                <button
+                  type='submit'
+                  name='add'
+                  id='AddToCart'
+                  class='px-4 py-2 text-base font-medium text-white bg-orange-600 enabled:hover:bg-orange-800 disabled:bg-gray-400 disabled:cursor-not-allowed flex-1'
+                  {% if isAvailable == false %}
+                    disabled
+                  {% endif %}
+                >
+                  {% if isAvailable %}
+                    Add To Cart
+                  {% else %}
+                    Sold Out
+                  {% endif %}
+                </button>
+              </div>
+
+            {% when 'description' %}
+              <div class='mb-3'>
+                <p class='text-gray-700'>
+                  {{ product.description }}
+                </p>
+              </div>
+
+            {% else %}
+
+          {% endcase %}
+        {% endfor %}
+
+      {% endform %}
+    </div>
+  </div>
+</div>
+
+<style>
+  :root {
+    --swiper-theme-color: white;
+    --swiper-navigation-size: 30px;
+  }
+
+  @media (min-width: 1024px) {
+    .swiper-wrapper {
+      display: block;
+    }
+  }
+</style>
+
+<script>
+  class VariantSelector extends HTMLElement {
+    constructor() {
+      super();
+      this.addEventListener('change', this.onVariantChange);
+      this.isReversed = (this.dataset.isReversed === 'true');
+    }
+
+    onVariantChange() {
+      this.getSelectedOptions();
+      this.getSelectedVariant();
+
+      if (this.currentVariant) {
+        this.updateURL();
+        this.updateProductInput();
+        this.updatePrices();
+        this.updateAvailabilty();
+      }
+    }
+
+    getSelectedOptions() {
+      this.options = Array.from(this.querySelectorAll('select'), select => select.value);
+      if (this.isReversed) {
+        this.options = this.options.reverse();
+      }
+    }
+
+    getVariantJSON() {
+      this.variantsData = this.variantsData || JSON.parse(this.dataset.variants);
+      return this.variantsData;
+    }
+
+    getSelectedVariant() {
+      this.currentVariant = this.getVariantJSON().find(variant => {
+        const items = !variant.options.map((option, index, arr) => {
+          return this.options[index] === option;
+        }).includes(false);
+
+        if (items) {
+          return variant;
+        }
+      });
+    }
+
+    updateURL() {
+      if (this.currentVariant) {
+        window.history.replaceState({}, '', `${this.dataset.url}?variant=${this.currentVariant.id}`);
+      }
+    }
+
+    updateProductInput() {
+      document.querySelector('.shopify-product-form').querySelector('input[name="id"]').value = this.currentVariant.id;
+    }
+
+    updatePrices() {
+      const $produtcInfo = document.querySelector('.product--content');
+      const $strikePriceEl = $produtcInfo.querySelector('#strike-price');
+      const $currentPriceEl = $produtcInfo.querySelector('#current-price');
+      const $saleBadgeEl = $produtcInfo.querySelector('#sale-badge');
+      const moneySymbol = $currentPriceEl.dataset.currencySymbol;
+
+      const compare_at_price = this.currentVariant.compare_at_price || false;
+      const price = this.currentVariant.price;
+      const isOnSale = compare_at_price && compare_at_price > price
+      const newPrice = (parseInt(price) / 100).toFixed(2);
+
+      $currentPriceEl.textContent = moneySymbol + newPrice;
+
+      if (isOnSale) {
+        const newStrikePrice = (parseInt(compare_at_price) / 100).toFixed(2);
+        $strikePriceEl.textContent = moneySymbol + newStrikePrice;
+      }
+
+      [$strikePriceEl, $saleBadgeEl].forEach(el => el.classList.toggle('hidden', !isOnSale));
+    }
+
+    updateAvailabilty() {
+      const isAvailable = this.currentVariant.available;
+      const $atc = document.querySelector('.product--content #AddToCart');
+      $atc.toggleAttribute('disabled', !isAvailable);
+      $atc.textContent = isAvailable ? 'Add To Cart' : 'Sold Out';
+    }
+  }
+  customElements.define('variant-selector', VariantSelector);
+</script>
+
+{% javascript %}
+  let swiper = Swiper;
+  let init = false;
+  let mq = window.matchMedia('(max-width: 1023px)');
+
+  const handleCarousel = () => {
+    let toShowSlider = mq.matches;
+
+    if (toShowSlider && !init) {
+      init = true;
+      swiper = new Swiper('.swiper', {
+        slidesPerView: 1,
+        loop: false,
+        direction: 'horizontal',
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        }
+      });
+    } else if (init) {
+      swiper.destroy();
+      init = false;
+    }
+  }
+
+  window.addEventListener('load', () => {
+    handleCarousel();
+  });
+
+
+  mq.addEventListener('change', () => {
+    handleCarousel();
+  });
+{% endjavascript %}
+
+{% schema %}
+  {
+    "name": "Product",
+    "blocks": [
+      {
+        "type": "vendor",
+        "name": "Vendor",
+        "limit": 1
+      },
+      {
+        "type": "title",
+        "name": "Title",
+        "limit": 1
+      },
+      {
+        "type": "price",
+        "name": "Price Block",
+        "limit": 1
+      },
+      {
+        "type": "variants_options",
+        "name": "Variant Options Block",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "reverse_options",
+            "default": false,
+            "label": "Reverse the Selectors order"
+          }
+        ]
+      },
+      {
+        "type": "atc_block",
+        "name": "Qty & ATC Block",
+        "limit": 1
+      },
+      {
+        "type": "description",
+        "name": "Description",
+        "limit": 1
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,42 @@
+{
+  "name": "Product Template",
+  "sections": {
+    "template": {
+      "type": "template-pdp",
+      "blocks": {
+        "vendor": {
+          "type": "vendor"
+        },
+        "title": {
+          "type": "title"
+        },
+        "price": {
+          "type": "price"
+        },
+        "variants_options": {
+          "type": "variants_options"
+        },
+        "atc_block": {
+          "type": "atc_block"
+        },
+        "description": {
+          "type": "description"
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "variants_options",
+        "atc_block",
+        "description"
+      ],
+      "settings": {
+        "": ""
+      }
+    }
+  },
+  "order": [
+    "template"
+  ]
+}

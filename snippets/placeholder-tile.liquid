@@ -1,0 +1,24 @@
+<div class='bg-[#f2f2f2] shadow-lg rounded-b-lg overflow-hidden group flex'>
+  <a href="#placeholder" class='flex flex-col'>
+    <div class='overflow-hidden m-1 aspect-square bg-white flex items-end'>
+      {%- liquid
+        assign min = 1
+        assign max = 6
+        assign diff = max | minus: min
+        assign randomNumber = "now" | date: "%N" | modulo: diff | plus: min
+      -%}
+      {{ randomNumber | prepend: 'product-' | placeholder_svg_tag: 'w-full h-full object-cover transition-transform group-hover:scale-105' }}
+    </div>
+    <div class='py-4 px-3 md:px-6 flex flex-col flex-1'>
+      <h2 class='font-medium text-sm capitalize text-gray-500'>
+        Placeholder Product Tile
+      </h2>
+      <div class='flex justify-between items-baseline mt-auto mb-0'>
+        <span class='text-xs'>
+          In Stock
+        </span>
+        <span class='font-medium'>$ 00.00</span>
+      </div>
+    </div>
+  </a>
+</div>

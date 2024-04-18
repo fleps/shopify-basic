@@ -1,0 +1,15 @@
+{
+  "name": "Contact Us Page Template",
+  "sections": {
+    "template": {
+      "type": "template-page"
+    },
+    "contact-form": {
+      "type": "contact-form"
+    }
+  },
+  "order": [
+    "template",
+    "contact-form"
+  ]
+}

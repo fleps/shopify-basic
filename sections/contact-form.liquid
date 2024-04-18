@@ -1,0 +1,80 @@
+<div class='max-w-2xl mx-auto justify-center flex flex-wrap items-center my-8'>
+  {% if section.settings.form-title != blank %}
+    <h3 class='font-medium w-full mb-6'>{{ section.settings.form-title }}</h3>
+  {% endif %}
+
+  {% form 'contact', class: 'w-full' %}
+
+    {% if form.errors %}
+      <div class='mb-5 text-red-600 text-sm font-medium'>
+        {{ section.settings.form-error }}
+      </div>
+    {% elsif form.posted_successfully? %}
+      <div class='mb-5 text-green-600 text-sm font-medium flex items-center'>
+        {% render 'icon-success' %} <span class='ml-2'>{{ section.settings.form-success }}</span>
+      </div>
+    {% endif %}
+
+    <div class='flex gap-3'>
+      <div class='md:w-1/2 mb-5'>
+        <label class='text-grey-700 font-medium text-xs mb-2' for='contact_name'>Your Name*</label>
+        <input
+          type='text'
+          name='contact[name]'
+          id='contact_name'
+          class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400'
+          required />
+      </div>
+      <div class='md:w-1/2 mb-5'>
+        <label class='text-grey-700 font-medium text-xs mb-2' for='contact_email'>Your Email*</label>
+        <input
+          type='email'
+          name='contact[email]'
+          id='contact_email'
+          class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400'
+          required />
+      </div>
+    </div>
+
+    <label class='text-grey-700 font-medium text-xs mb-2' for='contact_content'>Your Message*</label>
+    <textarea
+      name='contact[body]'
+      id='contact_content'
+      required
+      class='w-full border text-gray-700 h-30 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400' ></textarea>
+
+    <button type='submit' class='mt-4 px-4 py-2 border text-base font-medium text-white bg-orange-600 hover:bg-orange-800'>
+      Submit
+    </button>
+  {% endform %}
+</div>
+
+{% schema %}
+{
+  "name": "Contact Form",
+  "settings": [
+    {
+      "type": "text",
+      "id": "form-title",
+      "label": "Form Title"
+    },
+    {
+      "type": "text",
+      "id": "form-error",
+      "label": "Form Error Message",
+      "default": "Oh oh, something happened. Try again!"
+    },
+    {
+      "type": "text",
+      "id": "form-success",
+      "label": "Form Success Message",
+      "default": "Thank you for contacting us! We will get back to you as soon as possible."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Form"
+    }
+  ]
+}
+{% endschema %}

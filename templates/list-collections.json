@@ -1,0 +1,14 @@
+{
+  "name": "Collections List Template",
+  "sections": {
+    "template": {
+      "type": "template-list-collections",
+      "settings": {
+        "": ""
+      }
+    }
+  },
+  "order": [
+    "template"
+  ]
+}

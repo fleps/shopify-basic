@@ -1,0 +1,52 @@
+<div class='max-w-7xl p-5 container mx-auto'>
+  <h1 class='text-3xl mb-5'>{{ section.settings.title }}</h1>
+
+  <div class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
+    {% for collection in collections %}
+      {% if collection.all_products_count > 0 %}
+        <div class='bg-[#f2f2f2] shadow-lg rounded-b-lg overflow-hidden group flex'>
+          <a href="{{ collection.url }}" class='flex flex-col'>
+            <div class='overflow-hidden m-1 aspect-square bg-white flex items-center'>
+              {% if collection.featured_image != blank %}
+                {{ collection.featured_image
+                  | image_url: width: 400
+                  | image_tag:
+                    class: 'object-fill transition-transform group-hover:scale-105',
+                    alt: collection.title | escape
+                }}
+              {% else %}
+                {%- liquid
+                assign min = 1
+                assign max = 6
+                assign diff = max | minus: min
+                assign randomNumber = "now" | date: "%N" | modulo: diff | plus: min
+                -%}
+                {{ randomNumber | prepend: 'collection-' | placeholder_svg_tag: 'w-full h-full object-cover transition-transform
+                group-hover:scale-105' }}
+              {% endif %}
+            </div>
+            <div class='py-4 px-3 md:px-6 flex flex-col flex-1'>
+              <h2 class='font-medium text-sm text-center capitalize text-gray-500'>
+                {{ collection.title }}
+              </h2>
+            </div>
+          </a>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collections List",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Our Collections",
+      "label": "Title"
+    }
+  ]
+}
+{% endschema %}
