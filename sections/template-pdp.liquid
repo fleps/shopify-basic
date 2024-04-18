@@ -38,12 +38,12 @@
                 {%- assign isOnSale = true -%}
               {%- endif -%}
 
-              <div class='mb-3 flex items-center'>
+              <div class='mb-3 flex items-center font-serif'>
                 <span class='text-gray-500 line-through mr-2 {% unless isOnSale %} hidden {% endunless %}' id='strike-price'>
                   {{ current_variant.compare_at_price | money }}
                 </span>
                 <span
-                  class='text-lg font-medium'
+                  class='text-2xl font-medium'
                   data-currency-symbol='{{ cart.currency.symbol }}'
                   id='current-price'>
                   {{ current_variant.price | money }}
@@ -81,7 +81,7 @@
                   type='submit'
                   name='add'
                   id='AddToCart'
-                  class='px-4 py-2 text-base font-medium text-white bg-orange-600 enabled:hover:bg-orange-800 disabled:bg-gray-400 disabled:cursor-not-allowed flex-1'
+                  class='btn-primary flex-1'
                   {% if isAvailable == false %}
                     disabled
                   {% endif %}

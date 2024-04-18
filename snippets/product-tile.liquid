@@ -13,7 +13,7 @@
       {% endif %}
     </div>
     <div class='py-4 px-3 md:px-6 flex flex-col flex-1'>
-      <h2 class='font-medium text-sm capitalize text-gray-500'>
+      <h2 class='font-medium text-base capitalize text-zinc-600 leading-4'>
         {%- assign toRemove = product.vendor | append: ' | ' -%}
         {{ product.title | remove: toRemove | capitalize }}
       </h2>
@@ -25,7 +25,7 @@
           <span class='font-medium text-red-600'>Sold out</span>
           {% endif %}
         </span>
-        <div class='flex items-center relative'>
+        <div class='flex items-center relative font-serif'>
           {% if product.compare_at_price %}
             <span class='text-gray-500 line-through mr-2 text-xs'>{{ product.compare_at_price | money }}</span>
             <span class='text-lg font-medium text-red-600'>{{ product.price | money }}</span>
