@@ -12,5 +12,9 @@
   "license": "ISC",
   "devDependencies": {
     "tailwindcss": "^3.4.3"
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "singleQuote": true
   }
 }
