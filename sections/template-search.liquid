@@ -2,13 +2,13 @@
 
   {% paginate search.results by section.settings.results-per-page %}
     {% if search.results_count > 0 %}
-      <div class='flex items-end justify-between mb-5'>
+      <div class='flex flex-col items-start mb-5' x-data>
         <h1 class='text-3xl'>
           Found {{ search.results_count }} result(s) for: <span class='text-orange-500 italic'>{{ search.terms | escape }} </span>
         </h1>
-        {% comment %} <button x-on:click='searchBarOpen = true' type='button' class='whitespace-nowrap text-base text-gray-500 hover:text-gray-900'>
-          » Try another search?
-        </button> {% endcomment %}
+        <button @click='$dispatch("open-search")' type='button' class='whitespace-nowrap text-base text-gray-500 hover:text-gray-900'>
+          » New search?
+        </button>
       </div>
 
       <div class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>

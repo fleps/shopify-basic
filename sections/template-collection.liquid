@@ -1,11 +1,21 @@
 <div class='max-w-7xl p-5 container mx-auto'>
   {% paginate collection.products by section.settings.products-per-page %}
 
-    <div class='flex items-end justify-between mb-5'>
-      <h1 class='text-3xl'>{{ collection.title }}</h1>
+    <div class='flex items-end mb-5' x-data>
+      <h1 class='text-3xl'>
+        {% if collection.handle == 'all' %}
+          All Products
+        {% else %}
+          {{ collection.title }}
+        {% endif %}
+      </h1>
 
       {% if collection.handle != 'all' %}
-        <a class='text-sm' href='{{ routes.collections_url }}'>« See All Collections</a>
+        <a class='text-sm ml-auto mr-0' href='{{ routes.collections_url }}'>« See All Collections</a>
+      {% else %}
+        <button @click='$dispatch("open-search")' type='button' class='whitespace-nowrap text-base text-gray-500 hover:text-gray-900 mb-[6px] ml-2' title='Do a Product Search'>
+          {% render 'icon-search' %}
+        </button>
       {% endif %}
     </div>
 
