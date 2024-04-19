@@ -2,9 +2,9 @@
 
 <div class="relative bg-zinc-100" x-data="{ mobileMenuOpen: false, searchBarOpen: false }">
   <div class="mx-auto px-4 sm:px-6 max-w-7xl container">
-    <div class="flex justify-between items-center py-5 md:justify-start md:space-x-10">
+    <div class="flex justify-center items-center py-5">
       <!-- STORE NAME / STORE LOGO -->
-      <div class="flex justify-start lg:flex-1 text-4xl font-yanone truncate">
+      <div class="flex justify-start md:basis-[120px]  text-4xl font-yanone truncate mr-auto">
         <a href='{{ routes.root_url }}'>{{ shop.name }}</a>
       </div>
 
@@ -27,7 +27,7 @@
         {% for link in main_menu_linklist %}
           {% if link.links != blank %}
             {% assign link_handle = link.handle | replace: '-', '_' %}
-            <div class="relative" x-data="{ {{ link_handle }}: false }">
+            <div class="relative flex justify-center" x-data="{ {{ link_handle }}: false }">
               <button
                 x-on:click="{{ link_handle }} = ! {{ link_handle }}"
                 type="button"
@@ -43,20 +43,16 @@
                 x-cloak
                 x-show="{{ link_handle }}"
                 @click.away="{{ link_handle }} = false"
-                class="absolute z-10 -ml-5 mt-5 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2"
+                class="absolute top-full z-10 overflow-hidden min-w-max"
               >
-                <div class="shadow-lg border ring-black ring-opacity-5 overflow-hidden rounded-lg">
-                  <div class="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
-                    {% for childLink in link.links %}
-                      <a href="{{ childLink.url  }}" class="-m-3 p-3 flex items start rounded-lg hover:bg-gray-100">
-                        <div class="ml-4">
-                          <p class="text-gray-900 text-base font-medium">
-                            {{ childLink.title }}
-                          </p>
-                        </div>
+                <div class='flex flex-col flex-wrap bg-white shadow-lg border rounded-lg md:max-h-[350px]'>
+                  {% for collection in collections %}
+                    {% if collection.products_count > 0 and collection.handle != 'home page' %}
+                      <a href="{{ collection.url  }}" class="block px-5 m-2 py-2 text-center hover:bg-gray-100 text-gray-900 text-base font-medium whitespace-nowrap capitalize">
+                        {{ collection.title | downcase }}
                       </a>
-                    {% endfor %}
-                  </div>
+                    {% endif %}
+                  {% endfor %}
                 </div>
               </div>
             </div>
@@ -68,7 +64,7 @@
         {% endfor %}
       </nav>
 
-      <div class="hidden md:flex items-center justify-end md:flex-1 space-x-5">
+      <div class="hidden md:flex md:basis-[120px] md:ml-auto items-center justify-end space-x-5">
         <button x-on:click='searchBarOpen = true' type='button' class='whitespace-nowrap text-base text-gray-500 hover:text-gray-900' title='Site Search'>
           {% render 'icon-search' %}
         </button>
@@ -91,7 +87,7 @@
         <!-- MOBILE MENU HEADER TITLE PLUS CLOSE BUTTON -->
         <div class="flex items-center justify-between pb-3">
           <div>
-            <h1 class="text-lg text-gray-500">{{ section.settings.mobile_menu_title }}</h1>
+            <h2 class="text-lg text-gray-500">{{ section.settings.mobile_menu_title }}</h2>
           </div>
           <div class="-mr-2">
             <button x-on:click="mobileMenuOpen = false" type="button" class="bg-white rounded-md p-2 text-gray-500">
@@ -116,21 +112,20 @@
                     {% render 'icon-arrow-down' %}
                   </button>
 
-                  <div x-cloak x-show="{{ link_handle }}" class="grid gap-y-7 py-3">
-                    {% for childLink in link.links %}
-                      <a
-                        href="#"
-                        class="-m-3 p-3 mt-2 flex items-center rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-                      >
-                        <span class="ml-3 text-base font-medium text-gray-500">{{ childLink.title }}</span>
-                      </a>
+                  <div x-cloak x-show="{{ link_handle }}" class="py-3">
+                    {% for collection in collections %}
+                      {% if collection.products_count > 0 and collection.handle != 'home page' %}
+                        <a href="{{ collection.url  }}" class="block px-2 py-2 my-1 text-gray-500 text-base font-medium whitespace-nowrap capitalize">
+                          {{ collection.title | downcase }}
+                        </a>
+                      {% endif %}
                     {% endfor %}
                   </div>
                 </div>
 
               {% else %}
                 <a
-                  href="#"
+                  href="{{ link.url }}"
                   class="-m-3 p-3 flex items-center rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-50"
                 >
                   {{ link.title }}
