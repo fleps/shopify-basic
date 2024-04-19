@@ -1,8 +1,14 @@
+{% assign collectionArr = section.settings.featured-collection.products | default: collections['all'].products %}
+
 <div class='max-w-7xl p-5 container mx-auto'>
-  <h1 class='text-3xl mb-5'>{{ section.settings.title }}</h1>
+  <div class='flex items-end justify-between mb-5'>
+    <h1 class='text-3xl'>{{ section.settings.title }}</h1>
+
+    <a class='text-sm' href='{{ routes.all_products_collection_url }}'>« Shop All Products</a>
+  </div>
 
   <div class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
-    {% for product in section.settings.featured-collection.products limit: section.settings.products-to-show %}
+    {% for product in collectionArr limit: section.settings.products-to-show %}
       {% render 'product-tile', product: product %}
     {% else %}
       {% for item in (1..4) %}
@@ -31,6 +37,7 @@
       "type": "range",
       "id": "products-to-show",
       "label": "Products to Show",
+      "step": 1,
       "min": 4,
       "max": 8,
       "default": 4

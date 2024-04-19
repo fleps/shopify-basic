@@ -23,6 +23,10 @@
     {% section 'header' %}
     <main role="main">
       {{ content_for_layout }}
+
+      {% if template.name == 'search' and search.results_count == 0 %}
+        {% section 'featured-collection' %}
+      {% endif %}
     </main>
   </body>
 </html>
