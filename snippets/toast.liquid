@@ -1,0 +1,40 @@
+{%- case style -%}
+  {% when 'error' %}
+    {% assign bgColor = 'bg-red-600' %}
+    {% assign borderColor = 'border-red-600' %}
+    {% assign listColor = '[&_li]:marker:text-red-600' %}
+  {% when 'success' %}
+    {% assign bgColor = 'bg-lime-600' %}
+    {% assign borderColor = 'border-lime-600' %}
+    {% assign listColor = '[&_li]:marker:text-lime-600' %}
+{%- endcase -%}
+<div
+  class='inline-flex shadow-lg rounded-lg absolute left-0 right-0 max-w-[90vw] md:max-w[450px] w-fit m-auto -top-[50%] animate-top-down'
+  x-data='{showError: true}'
+  x-cloak
+  x-show='showError'
+  x-transition:leave='transition ease-in duration-200'
+  x-transition:leave-start='opacity-100'
+  x-transition:leave-end='opacity-0'
+>
+  <div class='{{ bgColor }} p-3 rounded-l-lg flex items-center text-white'>
+    {%- case style -%}
+      {% when 'error' %}
+        {% render 'icon-error' %}
+      {% when 'success' %}
+        {% render 'icon-success' %}
+    {%- endcase -%}
+  </div>
+  <div class='pl-4 pr-1 py-1 bg-white rounded-r-lg flex justify-between items-center w-full border border-l-transparent {{ borderColor }}'>
+    <div class='{{ listColor }} [&_ul]:list-disc [&_ul]:ml-3'>
+      {% if type == 'form' and style == 'error' %}
+        {{ content | default_errors }}
+      {% else %}
+        {{ content }}
+      {% endif %}
+    </div>
+    <button type='button' x-on:click='showError = false' class='mb-auto ml-3 flex w-4'>
+      {% render 'icon-close' %}
+    </button>
+  </div>
+</div>

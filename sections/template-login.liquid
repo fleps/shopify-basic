@@ -7,8 +7,6 @@
         <h2 class='text-2xl mb-3'>I already have an account</h2>
         {% form 'customer_login' %}
           <div class='flex flex-col'>
-            {{ form.errors | default_errors }}
-
             <label class='text-grey-700 font-medium text-xs mb-2' for='customer_email'>Email Address *</label>
             <input
               class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400 mb-3'
@@ -16,6 +14,7 @@
               name='customer[email]'
               id='customer_email'
               placeholder='Type your email'
+              autocomplete='email'
               required
             >
 
@@ -27,18 +26,18 @@
               id='customer_password'
               placeholder='Type your password'
               required
+              autocomplete='current-password'
             >
 
             <button type='submit' class='mt-4 btn-primary md:w-40'>Login</button>
           </div>
         {% endform %}
       </div>
+
       <div class='bg-white flex flex-col border rounded-lg shadow-lg p-5 mt-5'>
         <h2 class='text-2xl mb-3'>Forgot your password?</h2>
         {% form 'recover_customer_password' %}
           <div class='flex flex-col'>
-            {{ form.errors | default_errors }}
-
             <label class='text-grey-700 font-medium text-xs mb-2' for='customer_email'>Email Address *</label>
             <input
               class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400 mb-3'
@@ -50,6 +49,14 @@
 
             <button type='submit' class='mt-4 btn-primary md:w-40'>Reset</button>
           </div>
+          {% comment %} Do not show any error like "account not found with that email", it's a security flaw {% endcomment %}
+          {% if form.posted_successfully? or form.errors %}
+            {% render 'toast',
+              type: 'generic',
+              style: 'success',
+              content: 'Instructions sent to the specified email.'
+            %}
+          {% endif %}
         {% endform %}
       </div>
     </div>
@@ -57,10 +64,8 @@
       <div class='bg-white flex flex-col border rounded-lg shadow-lg p-5'>
         <h2 class='text-2xl mb-1'>Don't have an account?</h2>
         <p class='mb-3'>Use the form below to register</p>
-        {% form 'create_customer' %}
+        {% form 'create_customer', return_to: routes.account_login_url %}
           <div class='flex flex-col'>
-            {{ form.errors | default_errors }}
-
             <label class='text-grey-700 font-medium text-xs mb-2' for='first_name'>First Name *</label>
             <input
               required
@@ -68,7 +73,6 @@
               type='text'
               value=''
               name='customer[first_name]'
-              size='30'
             >
 
             <label class='text-grey-700 font-medium text-xs mb-2' for='last_name'>Last Name *</label>
@@ -78,31 +82,41 @@
               type='text'
               value=''
               name='customer[last_name]'
-              size='30'
             >
 
             <label class='text-grey-700 font-medium text-xs mb-2' for='email'>Email Address *</label>
             <input
-              required
               class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400 mb-3'
               type='email'
               value=''
               name='customer[email]'
-              size='30'
+              autocomplete='email'
             >
 
             <label class='text-grey-700 font-medium text-xs mb-2' for='password'>Password *</label>
             <input
               required
-              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400 mb-3'
+              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400 mb-1'
               type='password'
               value=''
               name='customer[password]'
-              size='30'
+              pattern='(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=])[A-Za-z\d@$!%*?&]{8,}'
+              placeholder='Type your password'
+              title='Must have 8 digits: at least 1 uppercase and lowercase letter, 1 special character and 1 number.'
+              min='8'
+              autocomplete='new-password'
+            >
+            <small class='text-zinc-400'
+              >Must have 8 digits: at least 1 uppercase and lowercase letter, 1 special character and 1 number.</small
             >
 
             <button type='submit' class='mt-4 btn-primary md:w-40'>Register</button>
           </div>
+
+          {% comment %} Error toast - login and registration "share" the same form.errors, so this will serve both {% endcomment %}
+          {% if form.errors %}
+            {% render 'toast', type: 'form', style: 'error', content: form.errors %}
+          {% endif %}
         {% endform %}
       </div>
     </div>

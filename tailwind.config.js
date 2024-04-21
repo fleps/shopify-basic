@@ -16,6 +16,16 @@ module.exports = {
         serif: ['Kreon', ...defaultTheme.fontFamily.serif],
         'yanone': ['Yanone Kaffeesatz', ...defaultTheme.fontFamily.sans],
       },
+      keyframes: {
+        'top-down': {
+          '0%': { top: '-50%' },
+          '50%': { top: '140px' },
+          '100%': { top: '90px' }
+        }
+      },
+      animation: {
+        'top-down': 'top-down 200ms ease-out 500ms forwards',
+      }
     },
   },
   plugins: [],
