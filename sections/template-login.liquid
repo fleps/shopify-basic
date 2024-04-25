@@ -1,15 +1,20 @@
 <div class='max-w-7xl p-5 container mx-auto'>
   <h1 class='text-3xl mb-5'>{{ section.settings.title }}</h1>
 
+  <div class='font-medium text-orange-500 mb-3 -mt-3 hidden' id='checkout-notice'>
+    <span class='text-gray-500 -mt-[1px] mr-1'>{% render 'icon-info' %}</span>
+    Please login or register to continue your Checkout.
+  </div>
+
   <div class='flex flex-wrap md:flex-nowrap gap-5'>
     <div class='w-full md:w-1/2'>
       <div class='bg-white flex flex-col border rounded-lg shadow-lg p-5'>
         <h2 class='text-2xl mb-3'>I already have an account</h2>
         {% form 'customer_login' %}
           <div class='flex flex-col'>
-            <label class='text-grey-700 font-medium text-xs mb-2' for='customer_email'>Email Address *</label>
+            <label class='text-grey-700 font-medium text-sm mb-1' for='customer_email'>Email Address *</label>
             <input
-              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400 mb-3'
+              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-3'
               type='email'
               name='customer[email]'
               id='customer_email'
@@ -18,9 +23,9 @@
               required
             >
 
-            <label class='text-grey-700 font-medium text-xs mb-2' for='customer_password'>Password *</label>
+            <label class='text-grey-700 font-medium text-sm mb-1' for='customer_password'>Password *</label>
             <input
-              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400 mb-3'
+              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-3'
               type='password'
               name='customer[password]'
               id='customer_password'
@@ -38,9 +43,9 @@
         <h2 class='text-2xl mb-3'>Forgot your password?</h2>
         {% form 'recover_customer_password' %}
           <div class='flex flex-col'>
-            <label class='text-grey-700 font-medium text-xs mb-2' for='customer_email'>Email Address *</label>
+            <label class='text-grey-700 font-medium text-sm mb-1' for='customer_email'>Email Address *</label>
             <input
-              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400 mb-3'
+              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-3'
               type='email'
               name='email'
               placeholder='Type your account email'
@@ -66,37 +71,38 @@
         <p class='mb-3'>Use the form below to register</p>
         {% form 'create_customer', return_to: routes.account_login_url %}
           <div class='flex flex-col'>
-            <label class='text-grey-700 font-medium text-xs mb-2' for='first_name'>First Name *</label>
+            <label class='text-grey-700 font-medium text-sm mb-1' for='first_name'>First Name *</label>
             <input
               required
-              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400 mb-3'
+              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-3'
               type='text'
               value=''
               name='customer[first_name]'
             >
 
-            <label class='text-grey-700 font-medium text-xs mb-2' for='last_name'>Last Name *</label>
+            <label class='text-grey-700 font-medium text-sm mb-1' for='last_name'>Last Name *</label>
             <input
               required
-              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400 mb-3'
+              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-3'
               type='text'
               value=''
               name='customer[last_name]'
             >
 
-            <label class='text-grey-700 font-medium text-xs mb-2' for='email'>Email Address *</label>
+            <label class='text-grey-700 font-medium text-sm mb-1' for='email'>Email Address *</label>
             <input
-              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400 mb-3'
+              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-3'
               type='email'
               value=''
               name='customer[email]'
               autocomplete='email'
+              required
             >
 
-            <label class='text-grey-700 font-medium text-xs mb-2' for='password'>Password *</label>
+            <label class='text-grey-700 font-medium text-sm mb-1' for='password'>Password *</label>
             <input
               required
-              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 valid:border-green-400 mb-1'
+              class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-1'
               type='password'
               value=''
               name='customer[password]'
@@ -122,6 +128,14 @@
     </div>
   </div>
 </div>
+
+<script>
+  window.addEventListener('load', () => {
+    if (window.location.search.includes('checkout')) {
+      document.body.querySelector('#checkout-notice').classList.replace('hidden', 'flex');
+    }
+  });
+</script>
 
 {% schema %}
 {

@@ -81,18 +81,32 @@
         </button>
         <a
           href='{{ routes.cart_url }}'
+          title='Go to Cart'
           class='whitespace-nowrap text-base text-gray-500 hover:text-gray-900 relative'
         >
           {% render 'icon-shopping-bag' %}
           {%- if cart.item_count > 0 %}
-            <span class='absolute -bottom-1 -right-1 font-sans text-[9px] bg-orange-600 rounded-full inline-flex justify-center items-center w-[14px] h-[14px] leading-none text-white'>
+            <span
+              class='absolute -bottom-1 -right-1 font-sans text-[9px] bg-orange-600 rounded-full inline-flex justify-center items-center w-[14px] h-[14px] leading-none text-white'
+              aria-label='Items in Cart'
+            >
               {{- cart.item_count -}}
             </span>
           {% endif -%}
         </a>
 
         {% if shop.customer_accounts_enabled %}
-          <a href='{{ routes.account_login_url }}' class='text-base text-gray-500 hover:text-gray-900'>Login</a>
+          {% assign accIconUrl = routes.account_login_url %}
+          {% if customer %}
+            {% assign accIconUrl = routes.account_url %}
+          {% endif %}
+          <a
+            href='{{ accIconUrl }}'
+            class='text-base text-gray-500 hover:text-gray-900'
+            title='Login / Account'
+          >
+            {% render 'icon-account' %}
+          </a>
         {% endif %}
       </div>
     </div>

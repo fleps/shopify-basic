@@ -16,6 +16,10 @@ button {
   @apply font-serif px-4 py-2 rounded-lg text-base font-medium text-white bg-orange-600 enabled:hover:bg-orange-800 disabled:bg-gray-400 disabled:cursor-not-allowed;
 }
 
+.btn-link {
+  @apply font-sans p-0 border-none;
+}
+
 input[type='text'],
 input[type='number'],
 input[type='password'],
@@ -26,4 +30,10 @@ textarea {
   @apply rounded-lg;
 }
 
-[x-cloak] { display: none !important; }
+.link-orange {
+  @apply text-orange-600;
+}
+
+[x-cloak] {
+  display: none !important;
+}

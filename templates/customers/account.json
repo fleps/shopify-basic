@@ -1,0 +1,14 @@
+{
+  "name": "Account",
+  "sections": {
+    "template": {
+      "type": "template-account",
+      "settings": {
+        "": ""
+      }
+    }
+  },
+  "order": [
+    "template"
+  ]
+}
