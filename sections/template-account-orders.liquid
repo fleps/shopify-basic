@@ -1,0 +1,208 @@
+<div class='max-w-7xl p-5 container mx-auto'>
+  <div class='flex items-end justify-between mb-5'>
+    <h1 class='text-3xl'>Order {{ order.name }}</h1>
+    <a class='text-sm' href='{{ routes.account_url }}'>« See all Orders</a>
+  </div>
+
+  <div class='flex flex-wrap md:flex-nowrap gap-5'>
+    <div class='w-full md:w-2/3'>
+      <div class='bg-white flex flex-col border rounded-lg shadow-lg p-2 md:p-5'>
+        <div class='flex flex-col'>
+          <div class='flex justify-between md:justify-normal gap-3 md:gap-6 bg-zinc-100 text-zinc-500 text-xs p-2 border border-zinc-200 rounded-t-lg'>
+            <div>
+              <p class='uppercase font-medium'>Date</p>
+              <p class='text-sm text-zinc-600'>{{ order.created_at | time_tag: format: 'date' }}</p>
+            </div>
+            <div>
+              <p class='uppercase font-medium'>Status</p>
+              {%- case order.fulfillment_status -%}
+                {% when 'fulfilled', 'complete' %}
+                  {% assign colorClasses = 'bg-green-300 text-green-800' %}
+                {% when 'unfulfilled', 'partial' %}
+                  {% assign colorClasses = 'bg-amber-400 text-amber-800' %}
+                {% else %}
+                  {% assign colorClasses = 'bg-zinc-300 text-zinc-800' %}
+              {%- endcase -%}
+              <p class='text-[10px] uppercase font-medium rounded-lg {{ colorClasses }} pt-[6px] pb-1 px-2 tracking-wide leading-none'>
+                {{ order.fulfillment_status_label }}
+              </p>
+            </div>
+          </div>
+
+          <div class='p-3 border-x border-x-zinc-100 pb-4'>
+            <h3 class='w-full mb-3'>Item(s) purchased: {{ order.item_count }}</h3>
+            {% assign unique_tracking_numbers = order.line_items
+              | map: 'fulfillment'
+              | map: 'tracking_number'
+              | uniq
+              | size
+            %}
+
+            {% for item in order.line_items %}
+              <div class='flex [&:not(:first-of-type)]:border-t py-3'>
+                <div aria-hidden='true'>
+                  <a href='{{ item.product.url }}'>
+                    {% if item.image %}
+                      {{ item.image | image_url: width: 80 | image_tag: class: 'rounded-lg' }}
+                    {% else %}
+                      {{ 'product-1' | placeholder_svg_tag: 'w-full h-full' }}
+                    {% endif %}
+                  </a>
+                </div>
+
+                <div class='pl-4 flex flex-wrap justify-between flex-1'>
+                  <div>
+                    <a href='{{ item.product.url }}' class='capitalize text-orange-400'>
+                      {{ item.product.title | capitalize }}
+                      <span class='text-zinc-500 font-bold lowercase' aria-label='Quantity:'
+                        >(x{{ item.quantity }})</span
+                      >
+                    </a>
+                    <p class='capitalize text-zinc-500'>{{ item.variant.title | capitalize }}</p>
+                  </div>
+                  <div class='text-zinc-500 md:whitespace-nowrap md:text-right'>
+                    <div>Unit price: {{ item.original_price | money }}</div>
+                    <div class='font-bold'>Total price: {{ item.final_line_price | money }}</div>
+                  </div>
+                  <div class='w-full pt-2'>
+                    <div class='text-zinc-500'>
+                      {% if item.successfully_fulfilled_quantity > 0 %}
+                        {% if order.fulfillment_status == 'partial' or unique_tracking_numbers > 1 %}
+                          {% if item.successfully_fulfilled_quantity != item.quantity %}
+                            <p class='text-[10px] uppercase font-medium rounded-lg bg-amber-400 text-amber-800 pt-[6px] pb-1 px-2 tracking-wide leading-none inline-block'>
+                              Partial Shipping
+                            </p>
+                            <div class='p-2 my-2 border rounded-lg border-amber-400 bg-amber-200 text-amber-800 text-sm inline-block'>
+                              This item total quantity could not be sent in the same shipping. Wait for more information
+                              via email.
+                            </div>
+                          {% else %}
+                            <p class='text-[10px] uppercase font-medium rounded-lg bg-green-300 text-green-800 pt-[6px] pb-1 px-2 tracking-wide leading-none inline-block'>
+                              Item Shipped
+                            </p>
+                          {% endif %}
+                          <p><b>Shipped quantity:</b> {{ item.successfully_fulfilled_quantity }}</p>
+                          <p>
+                            <b>Tracking:</b>
+                            <a
+                              class='text-lime-600 inline-flex items-end leading-3'
+                              target='_blank'
+                              href='{{ item.fulfillment.tracking_url }}'
+                            >
+                              {{- item.fulfillment.tracking_number -}}
+                              <span class='ml-1'>{% render 'icon-external-link' %}</span>
+                            </a>
+                            via {{ item.fulfillment.tracking_company }}
+                          </p>
+                        {% elsif unique_tracking_numbers == 1 and forloop.last %}
+                          {% assign order_tracking_url = item.fulfillment.tracking_url %}
+                          {% assign order_tracking_number = item.fulfillment.tracking_number %}
+                          {% assign order_tracking_company = item.fulfillment.tracking_company %}
+                        {% endif %}
+                      {% else %}
+                        <p class='text-[10px] uppercase font-medium rounded-lg bg-amber-400 text-amber-800 pt-[6px] pb-1 px-2 tracking-wide leading-none inline-block'>
+                          Pending Shipping
+                        </p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class='flex flex-wrap bg-zinc-100 p-2 border border-zinc-200 rounded-b-lg'>
+            <div class='w-full mb-3 md:w-1/2 pr-2'>
+              <h3 class='mb-2'>Shipping Information</h3>
+              <div class='text-zinc-700 w-full'>
+                {% if order.fulfillment_status == 'partial' or unique_tracking_numbers > 1 %}
+                  Your order has multiple shippings, please check each product shipping information above.
+                {% elsif order.fulfillment_status == 'fulfilled'
+                  or order.fulfillment_status == 'complete'
+                  and unique_tracking_numbers == 1
+                %}
+                  <p>
+                    <b>Tracking:</b>
+                    <a
+                      class='text-lime-600 inline-flex items-end leading-3'
+                      target='_blank'
+                      href='{{ order_tracking_url }}'
+                    >
+                      {{ order_tracking_number }}
+                      <span class='ml-1'>{% render 'icon-external-link' %}</span>
+                    </a>
+                    via {{ order_tracking_company }}
+                  </p>
+                {% else %}
+                  Pending shipping information
+                {% endif %}
+              </div>
+            </div>
+            <div>
+              <h3 class='mb-2'>Shipping Address</h3>
+              <div class='text-zinc-700 leading-tight w-full'>
+                {{ order.shipping_address | format_address }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='w-full md:w-1/3'>
+      <div class='bg-white flex flex-col md:sticky md:top-5 border rounded-lg shadow-lg p-5'>
+        <table class='w-full'>
+          <tr>
+            <td class='font-medium'>Shipping Cost:</td>
+            <td class='text-right text-zinc-600'>{{- order.shipping_price | money -}}</td>
+          </tr>
+          <tr>
+            <td class='font-medium'>Order Total:</td>
+            <td class='font-bold text-right text-black'>{{- order.total_net_amount | money -}}</td>
+          </tr>
+        </table>
+
+        <div class='mt-3 pt-3 border-t flex justify-between items-center'>
+          <span class='font-medium'>Payment Status:</span>
+          {%- case order.financial_status -%}
+            {% when 'paid', 'authorized' %}
+              {% assign pay_status_color = 'bg-green-300 text-green-800' %}
+            {% when 'partially_paid', 'pending' %}
+              {% assign pay_status_color = 'bg-amber-400 text-amber-800' %}
+            {% when 'unpaid' %}
+              {% assign pay_status_color = 'bg-red-400 text-red-200' %}
+            {% else %}
+              {% assign pay_status_color = 'bg-zinc-300 text-zinc-800' %}
+          {%- endcase -%}
+          <span class='text-[10px] uppercase font-medium rounded-lg {{ pay_status_color }} pt-[6px] pb-1 px-2 tracking-wide leading-none inline-block'>
+            {{- order.financial_status_label -}}
+          </span>
+        </div>
+
+        <div class='w-full mt-3 pt-3 border-t'>
+          <span class='font-medium inline-block w-full text-red'>Payment Information</span>
+          <div class='text-zinc-700'>
+            {% for transaction in order.transactions %}
+              {% assign cc_company = transaction.payment_details.credit_card_company %}
+              {% if cc_company != blank %}
+                <p>{{ cc_company }} - {{ transaction.payment_details.credit_card_number }}</p>
+              {% elsif transaction.kind == 'sale' %}
+                Payment made externally.
+              {% endif %}
+
+              {% if transaction.show_buyer_pending_payment_instructions? %}
+                <div class='p-2 border rounded-lg border-amber-400 bg-amber-200 text-amber-800'>
+                  {{ transaction.buyer_pending_payment_instructions }}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class='mt-2 text-zinc-700 leading-tight'>
+            <b>Billing Address</b>
+            {{ order.billing_address | format_address }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -6,7 +6,7 @@
       <div class='bg-white flex flex-col border rounded-lg shadow-lg p-2 md:p-5'>
         <h2 class='text-2xl mb-3'>Order History</h2>
         {% if customer.orders_count > 0 %}
-          {% paginate customer.orders by 12 %}
+          {% paginate customer.orders by 10 %}
             {% for order in customer.orders %}
               <div class='flex flex-col [&:not(:first-of-type)]:mt-8'>
                 <div class='flex justify-between md:justify-normal gap-3 md:gap-6 bg-zinc-100 text-zinc-500 text-xs p-2 border border-zinc-200 rounded-t-lg'>
@@ -31,7 +31,7 @@
                   <div class='text-right md:mr-0 md:ml-auto'>
                     <p class='uppercase font-medium'>Order {{ order.name }}</p>
                     <p class='text-sm'>
-                      <a href='{{ order.customer_order_url }}' class='link-orange'>» View Details</a>
+                      <a href='{{ order.customer_url }}' class='link-orange'>» View Details</a>
                     </p>
                   </div>
                 </div>
@@ -60,7 +60,7 @@
                   {% endfor %}
                 </div>
 
-                <div class='flex items-center justify-between gap-3 md:gap-6 text-zinc-600 p-2 border border-zinc-200 rounded-b-lg'>
+                <div class='flex items-center justify-between gap-3 md:gap-6 text-zinc-600 bg-zinc-100 p-2 border border-zinc-200 rounded-b-lg'>
                   <div>
                     <span class='uppercase font-medium inline-block ml-1 text-xs'>Payment:</span>
                     <span class='text-sm'>{{ order.financial_status_label }}</span>
