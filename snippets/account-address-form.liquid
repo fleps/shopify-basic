@@ -1,0 +1,147 @@
+{% case type %}
+  {% when 'new' %}
+    {% assign address = customer.new_address %}
+    {% assign modal_title = 'Add new address' %}
+  {% when 'edit' %}
+    {% assign modal_title = 'Edit your address' %}
+  {% else %}
+
+{% endcase %}
+
+<h2 class='text-xl mb-3'>{{ modal_title }}</h2>
+{% form 'customer_address', address, return_to: routes.account_url %}
+  <div class='flex flex-col'>
+    <div class='grid grid-cols-1 md:grid-cols-2 md:gap-4'>
+      <div>
+        <label class='text-grey-700 font-medium text-sm mb-1' for='{{ form.id }}_first_name'>First Name *</label>
+        <input
+          required
+          class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-4'
+          type='text'
+          value='{{ form.first_name }}'
+          name='customer[first_name]'
+          id='{{ form.id }}_first_name'
+          autofocus
+        >
+      </div>
+
+      <div>
+        <label class='text-grey-700 font-medium text-sm mb-1' for='{{ form.id }}_last_name' required>Last Name *</label>
+        <input
+          class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-4'
+          type='text'
+          id='{{ form.id }}_last_name'
+          value='{{ form.last_name }}'
+          name='customer[last_name]'
+          required
+        >
+      </div>
+    </div>
+
+    <label class='text-grey-700 font-medium text-sm mb-1' for='{{ form.id }}_address1' required>Address 1 *</label>
+    <input
+      class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-4'
+      type='text'
+      id='{{ form.id }}_address1'
+      value='{{ form.address1 }}'
+      name='address[address1]'
+      required
+    >
+
+    <label class='text-grey-700 font-medium text-sm mb-1' for='{{ form.id }}_address2'>Address 2</label>
+    <input
+      class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 mb-4'
+      type='text'
+      id='{{ form.id }}_address2'
+      value='{{ form.address2 }}'
+      name='address[address2]'
+    >
+
+    <div class='grid grid-cols-1 md:grid-cols-2 md:gap-4'>
+      <div>
+        <label class='text-grey-700 font-medium text-sm mb-1' for='{{ form.id }}_country'>Country *</label>
+        <select
+          name='address[country]'
+          id='{{ form.id }}_country'
+          class='w-full py-3 px-4 border focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-4'
+          data-address-country-selector
+          data-default='{{ form.country }}'
+          value='{{ form.country }}'
+          data-form-id='{{ form.id }}'
+          required
+        >
+          {{ all_country_option_tags }}
+        </select>
+      </div>
+
+      <div id='{{ form.id }}_province_wrapper' class='disabled'>
+        <label class='text-grey-700 font-medium text-sm mb-1' for='{{ form.id }}_province'>Province/State *</label>
+        <select
+          name='address[province]'
+          id='{{ form.id }}_province'
+          class='w-full py-3 px-4 border focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-4'
+          value='{{ form.province }}'
+          data-default='{{ form.province }}'
+          required
+          disabled
+        ></select>
+      </div>
+    </div>
+
+    <div class='grid grid-cols-1 md:grid-cols-3 md:gap-4'>
+      <div>
+        <label class='text-grey-700 font-medium text-sm mb-1' for='{{ form.id }}_city' required>City *</label>
+        <input
+          class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-4'
+          type='text'
+          id='{{ form.id }}_city'
+          value='{{ form.city }}'
+          name='address[city]'
+          required
+        >
+      </div>
+      <div>
+        <label class='text-grey-700 font-medium text-sm mb-1' for='{{ form.id }}_zip' required>Zip/Post Code *</label>
+        <input
+          class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-4'
+          type='text'
+          id='{{ form.id }}_zip'
+          value='{{ form.zip }}'
+          name='address[zip]'
+          required
+        >
+      </div>
+      <div>
+        <label class='text-grey-700 font-medium text-sm mb-1' for='{{ form.id }}_phone'>Phone Number *</label>
+        <input
+          class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-4'
+          type='tel'
+          id='{{ form.id }}_phone'
+          value='{{ form.phone }}'
+          name='address[phone]'
+          required
+        >
+      </div>
+    </div>
+    {% if address != customer.default_address %}
+      <div class='flex items-center'>
+        <input
+          type='checkbox'
+          name='address[default]'
+          id='address_default_address_{{ form.id }}'
+        >
+        <label class='text-grey-700 font-medium text-sm ml-2' for='address_default_address_{{ form.id }}'
+          >Set as default address</label
+        >
+      </div>
+    {% endif %}
+    <div class='flex gap-5'>
+      <button type='submit' class='mt-4 btn-primary'>Save Address</button>
+      <button type='button' class='mt-4 btn-secondary' data-dialog-close>Cancel</button>
+    </div>
+  </div>
+
+  {% if form.errors %}
+    {% render 'toast', type: 'form', style: 'error', content: form.errors %}
+  {% endif %}
+{% endform %}

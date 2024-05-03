@@ -87,21 +87,41 @@
     </div>
 
     <div class='w-full md:w-1/3'>
-      <div class='bg-white flex flex-col border rounded-lg shadow-lg p-5'>
+      <div class='bg-white flex flex-col border rounded-lg shadow-lg p-5 sticky top-5'>
         <div class='flex justify-between items-center'>
           <h2 class='text-2xl'>Address Book</h2>
-          <button type='button' class='btn-link link-orange text-sm uppercase font-bold'>Add New</button>
+          <button
+            type='button'
+            data-target-dialog='newAddress'
+            class='btn-link link-orange text-sm uppercase font-bold'
+          >
+            Add New
+          </button>
         </div>
         {%- if customer.addresses_count > 0 -%}
           {% for address in customer.addresses %}
             <div class='flex justify-between items-center mt-4 border-t pt-4'>
               <div class='text-zinc-700 leading-tight'>
                 {% if address == customer.default_address %}
-                  <span class='inline-block text-sm font-bold mb-1'>Default</span>
+                  <span class='text-[10px] uppercase font-medium rounded-lg text-green-800 bg-green-300 pt-[6px] pb-1 px-2 tracking-wide leading-none inline-block mb-1'>
+                    Default
+                  </span>
                 {% endif %}
                 {{ address | format_address }}
               </div>
-              <button type='button' class='btn-primary'>Edit</button>
+              <div class='flex flex-col gap-5'>
+                <button
+                  type='button'
+                  class='text-orange-600'
+                  title='Edit address'
+                  data-target-dialog='edit-{{ address.id }}'
+                >
+                  {% render 'icon-edit' %}
+                </button>
+                <button type='button' class='text-zinc-600' title='Delete Adress'>
+                  {% render 'icon-delete' %}
+                </button>
+              </div>
             </div>
           {% endfor %}
 
@@ -113,3 +133,144 @@
     </div>
   </div>
 </div>
+
+{% comment %} New Address Dialog {% endcomment %}
+<dialog class='dialog-main dialog-bottom' data-dialog='newAddress'>
+  <div class='dialog-inner'>
+    <button class='dialog-close-btn' data-dialog-close>
+      {% render 'icon-close' %}
+    </button>
+    <div class='dialog-content'>
+      {% render 'account-address-form', type: 'new' %}
+    </div>
+  </div>
+</dialog>
+
+{% comment %} Edit Addresses Dialogs {% endcomment %}
+{% for address in customer.addresses %}
+  <dialog class='dialog-main dialog-bottom' data-dialog='edit-{{ address.id }}'>
+    <div class='dialog-inner'>
+      <button class='dialog-close-btn' data-dialog-close>
+        {% render 'icon-close' %}
+      </button>
+      <div class='dialog-content'>
+        {% render 'account-address-form', type: 'edit', address: address %}
+      </div>
+      {% render 'spinner' %}
+    </div>
+  </dialog>
+{% endfor %}
+
+<script>
+  window.addEventListener('load', () => {
+    /* Dialog handling */
+    const dialogs = document.querySelectorAll('.dialog-main');
+    const openDialog = document.querySelectorAll('[data-target-dialog]');
+
+    openDialog.forEach(($trigger) => {
+      const $dialog = document.querySelector(`[data-dialog=${$trigger.dataset.targetDialog}]`);
+
+      $trigger.addEventListener('click', () => {
+        $dialog.showModal();
+      });
+    });
+
+    dialogs.forEach(($dialog) => {
+      const dialogCloseBtn = $dialog.querySelectorAll('[data-dialog-close]');
+
+      dialogCloseBtn.forEach(($button) => {
+        $button.addEventListener('click', () => {
+          $dialog.close();
+
+          if ($dialog.dataset.dialog == 'newAddress') {
+            $dialog.querySelector('form').reset();
+          }
+        });
+      });
+
+      $dialog.querySelector('form').addEventListener('submit', () => {
+        $dialog.querySelector('.spinner').classList.add('visible-overlay');
+      });
+    });
+
+    /* Country Selector Code */
+    /* Approach based on Shopify Common JS */
+
+    setSelectorByValue = function (selectEl, value) {
+      selectEl.selectedIndex = selectEl.querySelector(`[value="${value}"]`)?.index;
+      selectEl.dispatchEvent(new Event('change'));
+    };
+
+    CountryProvinceSelector = function (countryElID, provElID, options) {
+      this.countryEl = document.getElementById(countryElID);
+      this.provinceEl = document.getElementById(provElID);
+      this.provinceContainer = document.getElementById(options['hideElement'] || provElID);
+
+      this.countryEl.addEventListener('change', this.countryChanged.bind(this));
+      this.initCountry();
+      this.initProvince();
+    };
+
+    CountryProvinceSelector.prototype = {
+      initCountry: function () {
+        const value = this.countryEl.getAttribute('data-default') || this.countryEl.value;
+
+        if (value) {
+          setSelectorByValue(this.countryEl, value);
+        }
+
+        // Update Shopify divisor option for better UX.
+        const divisorOption = this.countryEl.querySelector('[value*="---"]');
+        if (divisorOption) {
+          divisorOption.setAttribute('disabled', true);
+          divisorOption.value = '';
+          divisorOption.innerHTML = 'Select your country';
+        }
+      },
+
+      initProvince: function () {
+        const value = this.provinceEl.getAttribute('data-default');
+
+        if (value && this.provinceEl.options.length > 0) {
+          setSelectorByValue(this.provinceEl, value);
+        }
+      },
+
+      countryChanged: function (e) {
+        const opt = this.countryEl.options[this.countryEl.selectedIndex];
+        const raw = opt.getAttribute('data-provinces');
+        const provinces = JSON.parse(raw);
+
+        this.provinceEl.innerHTML = ''; //Clean up province options
+
+        if (provinces && provinces.length == 0) {
+          this.provinceContainer.classList.add('disabled');
+          this.provinceEl.removeAttribute('required');
+          this.provinceEl.setAttribute('disabled', true);
+          this.createOptions(this.provinceEl, [['', 'N/A on selected country']]);
+        } else {
+          this.createOptions(this.provinceEl, provinces);
+          this.provinceContainer.classList.remove('disabled');
+          this.provinceEl.setAttribute('required', true);
+          this.provinceEl.removeAttribute('disabled');
+        }
+      },
+
+      createOptions: function (selectEl, provincesArr) {
+        let optionsEls = provincesArr.map((province) => `<option value='${province[0]}'>${province[1]}</option>`);
+        selectEl.innerHTML = optionsEls;
+      },
+    };
+
+    document.querySelectorAll('[data-address-country-selector]').forEach((inputField) => {
+      const formId = inputField.dataset.formId;
+      const countrySelector = `${formId}_country`;
+      const provinceSelector = `${formId}_province`;
+      const containerSelector = `${formId}_province_wrapper`;
+
+      new CountryProvinceSelector(countrySelector, provinceSelector, {
+        hideElement: containerSelector,
+      });
+    });
+  });
+</script>

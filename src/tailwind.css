@@ -1,39 +1,183 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  button {
+    @apply font-serif;
+  }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-button {
-  @apply font-serif;
+  input[type='text'],
+  input[type='number'],
+  input[type='password'],
+  input[type='email'],
+  input[type='search'],
+  input[type='tel'],
+  select,
+  textarea {
+    @apply rounded-lg;
+  }
+
+  input[type='checkbox'] {
+    @apply appearance-none w-4 h-4 border text-orange-500 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2 focus:ring-offset-2;
+
+    &:checked {
+      @apply bg-current bg-center bg-no-repeat border-transparent;
+
+      background-size: 8px 8px;
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg aria-hidden='true' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 12'%3E%3Cpath stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M1 5.917 5.724 10.5 15 1.5'/%3E%3C/svg%3E");
+    }
+  }
 }
 
-.btn-primary {
-  @apply font-serif px-4 py-2 rounded-lg text-base font-medium text-white bg-orange-600 enabled:hover:bg-orange-800 disabled:bg-gray-400 disabled:cursor-not-allowed;
+@layer components {
+  .btn-primary {
+    @apply font-serif px-4 py-2 rounded-lg text-base font-medium text-white bg-orange-600 enabled:hover:bg-orange-800 disabled:bg-gray-400 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply font-serif px-4 py-2 rounded-lg text-base font-medium text-white bg-zinc-600 enabled:hover:bg-zinc-800 disabled:bg-gray-400 disabled:cursor-not-allowed;
+  }
+
+  .btn-link {
+    @apply font-sans p-0 border-none;
+  }
 }
 
-.btn-link {
-  @apply font-sans p-0 border-none;
-}
+@layer utilities {
+  .link-orange {
+    @apply text-orange-600;
+  }
 
-input[type='text'],
-input[type='number'],
-input[type='password'],
-input[type='email'],
-input[type='search'],
-select,
-textarea {
-  @apply rounded-lg;
-}
+  [x-cloak] {
+    display: none !important;
+  }
 
-.link-orange {
-  @apply text-orange-600;
-}
+  /* Default centered dialog, sacel in/out animation */
+  .dialog-main {
+    @apply w-full max-w-[90vw] lg:max-w-[600px] bg-white border border-zinc-300 rounded-lg opacity-0;
 
-[x-cloak] {
-  display: none !important;
+    box-shadow: 0 0 15px 0px rgb(169 169 169 / 75%);
+
+    /* Experimental animations, does't affect browsers that don't support it */
+    transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
+      display 0.3s ease-out allow-discrete;
+
+    &::backdrop {
+      backdrop-filter: blur(0px);
+      background-color: rgb(0 0 0 / 40%);
+      opacity: 0;
+      transition: backdrop-filter 0.25s, opacity 0.2s;
+    }
+
+    &[open] {
+      display: flex;
+      opacity: 1;
+
+      &::backdrop {
+        opacity: 1;
+        backdrop-filter: blur(5px);
+      }
+    }
+
+    &.dialog-centered {
+      transform: scale(0.7);
+      transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
+        display 0.3s ease-out allow-discrete, transform 0.2s ease-out;
+
+      &[open] {
+        transform: scale(1);
+      }
+    }
+
+    &.dialog-bottom {
+      @apply rounded-b-none;
+
+      top: auto;
+      bottom: -100vh;
+      transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
+        display 0.3s ease-out allow-discrete, bottom 0.3s ease-out;
+
+      &[open] {
+        bottom: 0vh;
+      }
+    }
+  }
+
+  @starting-style {
+    .dialog-main[open] {
+      opacity: 0;
+
+      &::backdrop {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+      }
+
+      &.dialog-centered {
+        transform: scale(0.7);
+      }
+
+      &.dialog-bottom {
+        bottom: -100vh;
+      }
+    }
+  }
+
+  .dialog-inner {
+    @apply flex flex-col relative w-full pt-7 pr-1 shadow-inner max-h-full;
+  }
+
+  .dialog-content {
+    @apply overflow-auto max-h-full pl-7 pb-7 pr-6;
+  }
+
+  .dialog-close-btn {
+    @apply absolute top-1 right-1 text-zinc-500;
+  }
+
+  .dialog-content,
+  .add-custom-scrollbar {
+    scroll-behavior: smooth;
+
+    /* Firefox fallback */
+    @supports (scrollbar-color: auto) {
+      scrollbar-color: #b6b6b6 transparent; /* stylelint-disable-line */
+      scrollbar-width: auto; /* stylelint-disable-line */
+    }
+
+    @supports selector(::-webkit-scrollbar) {
+      scrollbar-color: unset;
+      scrollbar-width: unset;
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border: 3px solid #b6b6b6;
+        border-radius: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+        border-color: #919191;
+      }
+    }
+  }
+
+  .disabled {
+    @apply opacity-50;
+  }
+
+  .spinner {
+    @apply hidden;
+
+    &.visible-overlay {
+      @apply flex flex-col absolute top-0 right-0 bottom-0 left-0 items-center justify-center bg-white/80;
+    }
+  }
 }
