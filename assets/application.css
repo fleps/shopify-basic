@@ -713,6 +713,184 @@ input[type='checkbox'] {
   font-family: Yantramanav, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
+.link-orange {
+  --tw-text-opacity: 1;
+  color: rgb(234 88 12 / var(--tw-text-opacity));
+}
+
+/* Global dialog styles */
+
+.dialog-main {
+  width: 100%;
+  max-width: 90vw;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(212 212 216 / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  opacity: 0;
+}
+
+@media (min-width: 1024px) {
+  .dialog-main {
+    max-width: 600px;
+  }
+}
+
+.dialog-main {
+  box-shadow: 0 0 15px 0px rgb(169 169 169 / 75%);
+  /* Experimental animations, does't affect browsers that don't support it */
+  transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
+      display 0.3s ease-out allow-discrete;
+  &::backdrop {
+    -webkit-backdrop-filter: blur(0px);
+            backdrop-filter: blur(0px);
+    background-color: rgb(0 0 0 / 40%);
+    opacity: 0;
+    transition: opacity 0.2s, -webkit-backdrop-filter 0.25s;
+    transition: backdrop-filter 0.25s, opacity 0.2s;
+    transition: backdrop-filter 0.25s, opacity 0.2s, -webkit-backdrop-filter 0.25s;
+  }
+}
+
+/* Sadly can't use CSS nesting with [open], or Tailwind breakpoints utilities won't work. */
+
+.dialog-main[open] {
+  display: flex;
+  opacity: 1;
+  &::backdrop {
+    opacity: 1;
+    -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+  }
+}
+
+.dialog-centered {
+  transform: scale(0.7);
+  transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
+      display 0.3s ease-out allow-discrete, transform 0.2s ease-out;
+}
+
+.dialog-centered[open] {
+  transform: scale(1);
+}
+
+@starting-style {
+  .dialog-main[open] {
+    opacity: 0;
+    &::backdrop {
+      opacity: 0;
+      -webkit-backdrop-filter: blur(0px);
+              backdrop-filter: blur(0px);
+    }
+  }
+
+  .dialog-centered[open] {
+    transform: scale(0.7);
+  }
+
+  .dialog-bottom[open] {
+    bottom: -100vh;
+  }
+}
+
+.dialog-inner {
+  position: relative;
+  display: flex;
+  max-height: 100%;
+  width: 100%;
+  flex-direction: column;
+  padding-top: 1.75rem;
+  padding-right: 0.25rem;
+  --tw-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: inset 0 2px 4px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.dialog-content {
+  max-height: 100%;
+  overflow: auto;
+  padding-left: 1.75rem;
+  padding-bottom: 1.75rem;
+  padding-right: 1.5rem;
+}
+
+.dialog-close-btn {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(113 113 122 / var(--tw-text-opacity));
+}
+
+.dialog-content,
+  .add-custom-scrollbar {
+  scroll-behavior: smooth;
+  /* Firefox doesn't support all this, but the fallback is good enough */
+  @supports (scrollbar-color: auto) {
+    scrollbar-color: #b6b6b6 transparent;
+
+    /* stylelint-disable-line */
+
+    scrollbar-width: auto;
+
+    /* stylelint-disable-line */
+  }
+  @supports selector(::-webkit-scrollbar) {
+    scrollbar-color: unset;
+
+    scrollbar-width: unset;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border: 3px solid #b6b6b6;
+      border-radius: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      border-color: #919191;
+    }
+  }
+}
+
+.spinner {
+  display: none;
+  &.visible-overlay {
+    position: absolute;
+  }
+  &.visible-overlay {
+    top: 0px;
+  }
+  &.visible-overlay {
+    right: 0px;
+  }
+  &.visible-overlay {
+    bottom: 0px;
+  }
+  &.visible-overlay {
+    left: 0px;
+  }
+  &.visible-overlay {
+    display: flex;
+  }
+  &.visible-overlay {
+    flex-direction: column;
+  }
+  &.visible-overlay {
+    align-items: center;
+  }
+  &.visible-overlay {
+    justify-content: center;
+  }
+  &.visible-overlay {
+    background-color: rgb(255 255 255 / 0.8);
+  }
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -1109,6 +1287,10 @@ input[type='checkbox'] {
   width: 100vw;
 }
 
+.w-\[400px\] {
+  width: 400px;
+}
+
 .min-w-max {
   min-width: -moz-max-content;
   min-width: max-content;
@@ -1142,8 +1324,20 @@ input[type='checkbox'] {
   max-width: 28rem;
 }
 
+.max-w-\[300px\] {
+  max-width: 300px;
+}
+
+.max-w-\[400px\] {
+  max-width: 400px;
+}
+
 .flex-1 {
   flex: 1 1 0%;
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0;
 }
 
 .table-auto {
@@ -1250,6 +1444,10 @@ input[type='checkbox'] {
 
 .gap-5 {
   gap: 1.25rem;
+}
+
+.gap-2 {
+  gap: 0.5rem;
 }
 
 .gap-y-7 {
@@ -1465,6 +1663,11 @@ input[type='checkbox'] {
 .bg-zinc-300 {
   --tw-bg-opacity: 1;
   background-color: rgb(212 212 216 / var(--tw-bg-opacity));
+}
+
+.bg-zinc-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(228 228 231 / var(--tw-bg-opacity));
 }
 
 .fill-orange-600 {
@@ -1861,6 +2064,10 @@ input[type='checkbox'] {
   color: rgb(39 39 42 / var(--tw-text-opacity));
 }
 
+.underline {
+  text-decoration-line: underline;
+}
+
 .line-through {
   text-decoration-line: line-through;
 }
@@ -1930,195 +2137,63 @@ input[type='checkbox'] {
   transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
 }
 
-.link-orange {
-  --tw-text-opacity: 1;
-  color: rgb(234 88 12 / var(--tw-text-opacity));
-}
-
 [x-cloak] {
   display: none !important;
-}
-
-/* Default centered dialog, sacel in/out animation */
-
-.dialog-main {
-  width: 100%;
-  max-width: 90vw;
-  border-radius: 0.5rem;
-  border-width: 1px;
-  --tw-border-opacity: 1;
-  border-color: rgb(212 212 216 / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-  opacity: 0;
-}
-
-@media (min-width: 1024px) {
-  .dialog-main {
-    max-width: 600px;
-  }
-}
-
-.dialog-main {
-  box-shadow: 0 0 15px 0px rgb(169 169 169 / 75%);
-  /* Experimental animations, does't affect browsers that don't support it */
-  transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
-      display 0.3s ease-out allow-discrete;
-  &::backdrop {
-    -webkit-backdrop-filter: blur(0px);
-            backdrop-filter: blur(0px);
-    background-color: rgb(0 0 0 / 40%);
-    opacity: 0;
-    transition: opacity 0.2s, -webkit-backdrop-filter 0.25s;
-    transition: backdrop-filter 0.25s, opacity 0.2s;
-    transition: backdrop-filter 0.25s, opacity 0.2s, -webkit-backdrop-filter 0.25s;
-  }
-  &[open] {
-    display: flex;
-    opacity: 1;
-    &::backdrop {
-      opacity: 1;
-      -webkit-backdrop-filter: blur(5px);
-              backdrop-filter: blur(5px);
-    }
-  }
-  &.dialog-centered {
-    transform: scale(0.7);
-    transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
-        display 0.3s ease-out allow-discrete, transform 0.2s ease-out;
-    &[open] {
-      transform: scale(1);
-    }
-  }
-  &.dialog-bottom {
-    border-bottom-right-radius: 0px;
-    border-bottom-left-radius: 0px;
-  }
-  &.dialog-bottom {
-    top: auto;
-    bottom: -100vh;
-    transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
-        display 0.3s ease-out allow-discrete, bottom 0.3s ease-out;
-    &[open] {
-      bottom: 0vh;
-    }
-  }
-}
-
-@starting-style {
-  .dialog-main[open] {
-    opacity: 0;
-    &::backdrop {
-      opacity: 0;
-      -webkit-backdrop-filter: blur(0px);
-              backdrop-filter: blur(0px);
-    }
-    &.dialog-centered {
-      transform: scale(0.7);
-    }
-    &.dialog-bottom {
-      bottom: -100vh;
-    }
-  }
-}
-
-.dialog-inner {
-  position: relative;
-  display: flex;
-  max-height: 100%;
-  width: 100%;
-  flex-direction: column;
-  padding-top: 1.75rem;
-  padding-right: 0.25rem;
-  --tw-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
-  --tw-shadow-colored: inset 0 2px 4px 0 var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-
-.dialog-content {
-  max-height: 100%;
-  overflow: auto;
-  padding-left: 1.75rem;
-  padding-bottom: 1.75rem;
-  padding-right: 1.5rem;
-}
-
-.dialog-close-btn {
-  position: absolute;
-  top: 0.25rem;
-  right: 0.25rem;
-  --tw-text-opacity: 1;
-  color: rgb(113 113 122 / var(--tw-text-opacity));
-}
-
-.dialog-content,
-  .add-custom-scrollbar {
-  scroll-behavior: smooth;
-  /* Firefox fallback */
-  @supports (scrollbar-color: auto) {
-    scrollbar-color: #b6b6b6 transparent;
-
-    /* stylelint-disable-line */
-
-    scrollbar-width: auto;
-
-    /* stylelint-disable-line */
-  }
-  @supports selector(::-webkit-scrollbar) {
-    scrollbar-color: unset;
-
-    scrollbar-width: unset;
-
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border: 3px solid #b6b6b6;
-      border-radius: 6px;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      border-color: #919191;
-    }
-  }
 }
 
 .disabled {
   opacity: 0.5;
 }
 
-.spinner {
-  display: none;
-  &.visible-overlay {
-    position: absolute;
+@media not all and (min-width: 1024px) {
+  .max-lg\:dialog-bottom {
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    top: auto;
+    bottom: -100vh;
+    transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
+      display 0.3s ease-out allow-discrete, bottom 0.3s ease-out;
   }
-  &.visible-overlay {
-    top: 0px;
+
+  .max-lg\:dialog-bottom[open] {
+    bottom: 0vh;
   }
-  &.visible-overlay {
-    right: 0px;
+
+  .max-lg\:dialog-bottom {
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    top: auto;
+    bottom: -100vh;
+    transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
+      display 0.3s ease-out allow-discrete, bottom 0.3s ease-out;
   }
-  &.visible-overlay {
-    bottom: 0px;
+
+  .max-lg\:dialog-bottom[open] {
+    bottom: 0vh;
   }
-  &.visible-overlay {
-    left: 0px;
+
+  @starting-style {
+    .max-lg\:dialog-bottom[open] {
+      bottom: -100vh;
+    }
   }
-  &.visible-overlay {
-    display: flex;
+}
+
+@media (min-width: 1024px) {
+  .lg\:dialog-centered {
+    transform: scale(0.7);
+    transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
+      display 0.3s ease-out allow-discrete, transform 0.2s ease-out;
   }
-  &.visible-overlay {
-    flex-direction: column;
+
+  .lg\:dialog-centered[open] {
+    transform: scale(1);
   }
-  &.visible-overlay {
-    align-items: center;
-  }
-  &.visible-overlay {
-    justify-content: center;
-  }
-  &.visible-overlay {
-    background-color: rgb(255 255 255 / 0.8);
+
+  @starting-style {
+    .lg\:dialog-centered[open] {
+      transform: scale(0.7);
+    }
   }
 }
 
@@ -2378,6 +2453,10 @@ input[type='checkbox'] {
 
 .\[\&\:not\(\:first-of-type\)\]\:mt-8:not(:first-of-type) {
   margin-top: 2rem;
+}
+
+.\[\&\:not\(\:first-of-type\)\]\:mt-10:not(:first-of-type) {
+  margin-top: 2.5rem;
 }
 
 .\[\&\:not\(\:first-of-type\)\]\:border-t:not(:first-of-type) {

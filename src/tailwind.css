@@ -47,18 +47,12 @@
   .btn-link {
     @apply font-sans p-0 border-none;
   }
-}
 
-@layer utilities {
   .link-orange {
     @apply text-orange-600;
   }
 
-  [x-cloak] {
-    display: none !important;
-  }
-
-  /* Default centered dialog, sacel in/out animation */
+  /* Global dialog styles */
   .dialog-main {
     @apply w-full max-w-[90vw] lg:max-w-[600px] bg-white border border-zinc-300 rounded-lg opacity-0;
 
@@ -74,39 +68,40 @@
       opacity: 0;
       transition: backdrop-filter 0.25s, opacity 0.2s;
     }
+  }
 
-    &[open] {
-      display: flex;
+  /* Sadly can't use CSS nesting with [open], or Tailwind breakpoints utilities won't work. */
+  .dialog-main[open] {
+    display: flex;
+    opacity: 1;
+
+    &::backdrop {
       opacity: 1;
-
-      &::backdrop {
-        opacity: 1;
-        backdrop-filter: blur(5px);
-      }
+      backdrop-filter: blur(5px);
     }
+  }
 
-    &.dialog-centered {
-      transform: scale(0.7);
-      transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
-        display 0.3s ease-out allow-discrete, transform 0.2s ease-out;
+  .dialog-centered {
+    transform: scale(0.7);
+    transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
+      display 0.3s ease-out allow-discrete, transform 0.2s ease-out;
+  }
 
-      &[open] {
-        transform: scale(1);
-      }
-    }
+  .dialog-centered[open] {
+    transform: scale(1);
+  }
 
-    &.dialog-bottom {
-      @apply rounded-b-none;
+  .dialog-bottom {
+    @apply rounded-b-none;
 
-      top: auto;
-      bottom: -100vh;
-      transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
-        display 0.3s ease-out allow-discrete, bottom 0.3s ease-out;
+    top: auto;
+    bottom: -100vh;
+    transition: opacity 0.2s ease-out, overlay 0.3s ease-out allow-discrete,
+      display 0.3s ease-out allow-discrete, bottom 0.3s ease-out;
+  }
 
-      &[open] {
-        bottom: 0vh;
-      }
-    }
+  .dialog-bottom[open] {
+    bottom: 0vh;
   }
 
   @starting-style {
@@ -117,14 +112,14 @@
         opacity: 0;
         backdrop-filter: blur(0px);
       }
+    }
 
-      &.dialog-centered {
-        transform: scale(0.7);
-      }
+    .dialog-centered[open] {
+      transform: scale(0.7);
+    }
 
-      &.dialog-bottom {
-        bottom: -100vh;
-      }
+    .dialog-bottom[open] {
+      bottom: -100vh;
     }
   }
 
@@ -144,7 +139,7 @@
   .add-custom-scrollbar {
     scroll-behavior: smooth;
 
-    /* Firefox fallback */
+    /* Firefox doesn't support all this, but the fallback is good enough */
     @supports (scrollbar-color: auto) {
       scrollbar-color: #b6b6b6 transparent; /* stylelint-disable-line */
       scrollbar-width: auto; /* stylelint-disable-line */
@@ -169,15 +164,21 @@
     }
   }
 
-  .disabled {
-    @apply opacity-50;
-  }
-
   .spinner {
     @apply hidden;
 
     &.visible-overlay {
       @apply flex flex-col absolute top-0 right-0 bottom-0 left-0 items-center justify-center bg-white/80;
     }
+  }
+}
+
+@layer utilities {
+  [x-cloak] {
+    display: none !important;
+  }
+
+  .disabled {
+    @apply opacity-50;
   }
 }
