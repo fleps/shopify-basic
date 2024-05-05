@@ -1,15 +1,18 @@
 {% if paginate.pages > 1 %}
-  <nav role='navigation' class='flex my-8 items-center'>
-    {% comment %} {% if paginate.previous %}
-      <a href='{{ paginate.previous.url }}'>{{ paginate.previous.title }}</a>
-    {% endif %} {% endcomment %}
+  <nav role='navigation' class='flex mt-8 items-center'>
+    {% comment %}
+      {% if paginate.previous %}
+        <a href='{{ paginate.previous.url }}'>{{ paginate.previous.title }}</a>
+      {% endif %}
+    {% endcomment %}
 
     {% for part in paginate.parts %}
       {% if part.is_link %}
         <a
           class='border border-gray-400 text-gray-400 hover:bg-gray-200 text-center py-1 text-xs mx-1 rounded-sm w-[26px]'
-          href='{{ part.url }}'>
-            {{ part.title }}
+          href='{{ part.url }}'
+        >
+          {{ part.title }}
         </a>
       {% else %}
         <span class='border border-gray-600 text-center w-[26px] py-1 text-xs mx-1 rounded-sm font-bold'>

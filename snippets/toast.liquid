@@ -1,3 +1,7 @@
+{% comment %}
+  Global toast element using AlpineJS.
+  Idealy it should be extended to also accept configurations via JavaScript with alpines events + x-text + x-html directives
+{% endcomment %}
 {%- case style -%}
   {% when 'error' %}
     {% assign bgColor = 'bg-red-600' %}
@@ -8,9 +12,11 @@
     {% assign borderColor = 'border-lime-600' %}
     {% assign listColor = '[&_li]:marker:text-lime-600' %}
 {%- endcase -%}
+{% assign visible = visible | default: true %}
 <div
   class='inline-flex shadow-lg rounded-lg absolute left-0 right-0 max-w-[90vw] md:max-w[450px] w-fit m-auto -top-[50%] animate-top-down'
-  x-data='{showError: true}'
+  x-data='{showError: {{ visible }}}'
+  @showtoast.window='showError = true'
   x-cloak
   x-show='showError'
   x-transition:leave='transition ease-in duration-200'

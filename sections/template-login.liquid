@@ -12,6 +12,7 @@
         <h2 class='text-2xl mb-3'>I already have an account</h2>
         {% form 'customer_login' %}
           <div class='flex flex-col'>
+            {% comment %} TODO: create global styles for labels and inputs so there is no need to repeas all these calsses below on each item {% endcomment %}
             <label class='text-grey-700 font-medium text-sm mb-1' for='customer_email'>Email Address *</label>
             <input
               class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-3'
@@ -41,7 +42,7 @@
 
       <div class='bg-white flex flex-col border rounded-lg shadow-lg p-5 mt-5'>
         <h2 class='text-2xl mb-3'>Forgot your password?</h2>
-        {% form 'recover_customer_password' %}
+        {% form 'recover_customer_password', return_to: routes.account_login_url %}
           <div class='flex flex-col'>
             <label class='text-grey-700 font-medium text-sm mb-1' for='customer_email'>Email Address *</label>
             <input

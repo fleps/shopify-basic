@@ -1,7 +1,19 @@
+<script src='{{ 'account.js' | asset_url }}' defer></script>
+<script src='{{ 'dialogs.js' | asset_url }}' defer></script>
 <script src='{{ 'country-selector.js' | asset_url }}' defer></script>
 
 <div class='max-w-7xl p-5 container mx-auto'>
-  <h1 class='text-3xl mb-5'>My Account</h1>
+  <div class='flex items-end justify-between mb-5'>
+    <h1 class='text-3xl'>My Account</h1>
+    <nav class='flex'>
+      <button type='button' class='btn-link text-sm link-orange' data-reset-password-for='{{ customer.email }}'>
+        Reset Password
+      </button>
+      <a class='ml-3 pl-3 border-l text-sm text-zinc-500' href='{{ routes.account_logout_url }}'>Logout</a>
+    </nav>
+  </div>
+
+  {% render 'toast', type: 'generic', style: 'success', visible: 'false', content: 'Instructions sent to your email.' %}
 
   <div class='flex flex-wrap md:flex-nowrap gap-5'>
     <div class='w-full md:w-2/3'>
@@ -89,62 +101,69 @@
     </div>
 
     <div class='w-full md:w-1/3'>
-      <div class='bg-white flex flex-col border rounded-lg shadow-lg p-5 sticky top-5'>
-        <div class='flex justify-between items-center'>
-          <h2 class='text-2xl'>Address Book</h2>
-          <button
-            type='button'
-            data-target-dialog='newAddress'
-            class='btn-link link-orange text-sm uppercase font-bold'
-          >
-            Add New
-          </button>
-        </div>
-        {%- if customer.addresses_count > 0 -%}
-          {% for address in customer.addresses %}
-            <div class='flex justify-between items-center mt-4 border-t pt-4'>
-              <div class='text-zinc-700 leading-tight'>
-                {% if address == customer.default_address %}
-                  <span class='text-[10px] uppercase font-medium rounded-lg text-green-800 bg-green-300 pt-[6px] pb-1 px-2 tracking-wide leading-none inline-block mb-1'>
-                    Default
-                  </span>
-                {% endif %}
-                {{ address | format_address }}
+      <div class='sticky top-5'>
+        <div class='bg-white flex flex-col border rounded-lg shadow-lg p-5'>
+          <div class='flex justify-between items-center'>
+            <h2 class='text-2xl'>Address Book</h2>
+            <button
+              type='button'
+              data-target-dialog='newAddress'
+              class='btn-link link-orange text-sm uppercase font-bold'
+            >
+              Add New
+            </button>
+          </div>
+          {%- if customer.addresses_count > 0 -%}
+            {% for address in customer.addresses %}
+              <div class='flex justify-between items-center mt-4 border-t pt-4'>
+                <div class='text-zinc-700 leading-tight'>
+                  {% if address == customer.default_address %}
+                    <span class='text-[10px] uppercase font-medium rounded-lg text-green-800 bg-green-300 pt-[6px] pb-1 px-2 tracking-wide leading-none inline-block mb-1'>
+                      Default
+                    </span>
+                  {% endif %}
+                  {{ address | format_address }}
+                </div>
+                <div class='flex flex-col gap-5'>
+                  <button
+                    type='button'
+                    class='text-orange-600'
+                    title='Edit address'
+                    data-target-dialog='edit-{{ address.id }}'
+                  >
+                    {% render 'icon-edit' %}
+                  </button>
+                  <button
+                    type='button'
+                    data-delete-address='{{ address.id }}'
+                    class='text-zinc-600'
+                    title='Delete Adress'
+                  >
+                    {% render 'icon-delete' %}
+                  </button>
+                </div>
               </div>
-              <div class='flex flex-col gap-5'>
-                <button
-                  type='button'
-                  class='text-orange-600'
-                  title='Edit address'
-                  data-target-dialog='edit-{{ address.id }}'
-                >
-                  {% render 'icon-edit' %}
-                </button>
-                <button
-                  type='button'
-                  data-delete-address='{{ address.id }}'
-                  class='text-zinc-600'
-                  title='Delete Adress'
-                >
-                  {% render 'icon-delete' %}
-                </button>
-              </div>
-            </div>
-          {% endfor %}
+            {% endfor %}
 
-        {% else %}
-          <p>You don't have any address.</p>
-          <a href='{{ routes.account_addresses_url }}' class='text-sm link-orange'>Add new Address</a>
-        {%- endif -%}
+          {% else %}
+            <p>You don't have any address.</p>
+            <a href='{{ routes.account_addresses_url }}' class='text-sm link-orange'>Add new Address</a>
+          {%- endif -%}
+        </div>
+
+        <div class='flex mt-5 text-gray-500 text-sm md:text-base'>
+          <span class='-mt-[1px] mr-1'>{% render 'icon-info' %}</span>
+          <p>To change your account email, please <a class='link-orange' href='/pages/contact'>contact us</a>.</p>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-{% comment %} Account Modals/Dialogs below. Ideally this should be a global component. {% endcomment %}
+{% comment %} Account Modals/Dialogs below. Ideally this should be a global component with the dialog html being generated via JS on the fly if possible {% endcomment %}
 
 {% comment %} New Address Dialog {% endcomment %}
-<dialog class='dialog-main max-lg:dialog-bottom lg:dialog-centered' data-dialog='newAddress'>
+<dialog class='dialog-main max-lg:dialog-bottom lg:dialog-centered' data-dialog='newAddress' hidden>
   <div class='dialog-inner'>
     <button class='dialog-close-btn' data-dialog-close>
       {% render 'icon-close' %}
@@ -157,7 +176,7 @@
 
 {% comment %} Edit Addresses Dialogs {% endcomment %}
 {% for address in customer.addresses %}
-  <dialog class='dialog-main max-lg:dialog-bottom lg:dialog-centered' data-dialog='edit-{{ address.id }}'>
+  <dialog class='dialog-main max-lg:dialog-bottom lg:dialog-centered' data-dialog='edit-{{ address.id }}' hidden>
     <div class='dialog-inner'>
       <button class='dialog-close-btn' data-dialog-close>
         {% render 'icon-close' %}
@@ -165,13 +184,12 @@
       <div class='dialog-content'>
         {% render 'account-address-form', type: 'edit', address: address %}
       </div>
-      {% render 'spinner' %}
     </div>
   </dialog>
 {% endfor %}
 
-{% comment %} Delete Address Dialog {% endcomment %}
-<dialog class='dialog-main dialog-centered w-[400px]' data-dialog='deleteAddress'>
+{% comment %} Delete Address Dialog. This is a good one to become totally created by JS. {% endcomment %}
+<dialog class='dialog-main dialog-centered w-[400px]' data-dialog='deleteAddress' hidden>
   <div class='dialog-inner'>
     <button class='dialog-close-btn' data-dialog-close>
       {% render 'icon-close' %}
@@ -194,78 +212,5 @@
         </div>
       </div>
     </div>
-    {% render 'spinner' %}
   </div>
 </dialog>
-
-<script>
-  window.addEventListener('load', () => {
-    /* Dialog handling */
-    const dialogs = document.querySelectorAll('.dialog-main');
-    const openDialog = document.querySelectorAll('[data-target-dialog]');
-
-    const toggleSpinner = ($dialog, show = true) => {
-      $dialog.querySelector('.spinner').classList.add('visible-overlay');
-    };
-
-    openDialog.forEach(($trigger) => {
-      const $dialog = document.querySelector(`[data-dialog=${$trigger.dataset.targetDialog}]`);
-
-      $trigger.addEventListener('click', () => {
-        $dialog.showModal();
-      });
-    });
-
-    dialogs.forEach(($dialog) => {
-      const dialogCloseBtn = $dialog.querySelectorAll('[data-dialog-close]');
-
-      dialogCloseBtn.forEach(($button) => {
-        $button.addEventListener('click', () => {
-          $dialog.close();
-
-          if ($dialog.dataset.dialog == 'newAddress') {
-            $dialog.querySelector('form').reset();
-          }
-        });
-      });
-
-      $dialog.querySelector('form')?.addEventListener('submit', () => {
-        toggleSpinner($dialog, true);
-      });
-    });
-
-    /* Delete Address */
-    document.querySelectorAll('[data-delete-address]').forEach(($button) => {
-      $button.addEventListener('click', () => {
-        const addressId = $button.dataset.deleteAddress;
-        const $deleteDialog = document.querySelector('[data-dialog=deleteAddress]');
-
-        $deleteDialog.showModal();
-
-        $deleteDialog.querySelector('[data-confirm-delete]').addEventListener('click', () => {
-          toggleSpinner($deleteDialog, true);
-
-          const formData = new FormData();
-          formData.append('_method', 'delete');
-
-          fetch(`/account/addresses/${addressId}`, {
-            method: 'POST',
-            body: formData,
-          })
-            .then((response) => {
-              if (!response.ok) {
-                toggleSpinner($deleteDialog, true);
-                $deleteDialog.querySelector('[data-delete-error]').classList.remove('hidden');
-                return;
-              }
-
-              document.location.reload();
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        });
-      });
-    });
-  });
-</script>
