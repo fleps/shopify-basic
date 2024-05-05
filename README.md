@@ -1,40 +1,37 @@
-# :wave: Say hi to Elizabeth :wave:
+# Basic Shopify Store
 
-[![Generic badge](https://img.shields.io/badge/course%20available%3F-yes-green.svg)](https://shields.io/)
+This project was created based on a Shopify Theme Development – Online Store 2.0 + TailwindCSS course.
 
-This project is created and intended to be used for the [Shopify Theme Development – Online Store 2.0 + TailwindCSS course](https://weeklyhow.com/courses/)
+> ⚠ **Important**  
+> This is a basic Shopify Theme 2.0, **built from scratch**, converting a basic [skeleton store](https://shopify.dev/themes/tools/cli/installation) into JSON templates, as my own way of improving my knowledge and learning a few tricks regarding Shopify.  
+> This isn't "marked ready" and has no intent to be.
 
+> 📃 I didn't followed the course much regarding HTML, JS, Styles, as I didn't like what the instructor was doing, so the HTML structure, design/UX decisions and JS are all mine. I used the course mostly as a guide to the features to develop and to improve about Liquid / Shopify configurations and API.
 
-[Get the course!](https://weeklyhow.com/) | [Lessons covered](#lessons-covered) |
-[How to use](#how-to-use) | [Not a student?](#not-a-student)
+## Features Covered (WIP)
 
-## Lessons covered
+| Status | Feature |
+| :---: | :--- |
+| ✔ | Installing Development Tools |
+| ✔️ | Navigational Bar + floating search bar |
+| ✔️ | 404 Page                     |
+| ✔️ | Article Page                 |
+| ✔️ | Blog Page                    |
+| ✔️ | Cart / Empty Cart Pages |
+| ✔️ | Product Collection Page      |
+| ✔️ | Collections Page             |
+| ✔️ | Homepage (Only basic Index to load modules) |
+| ✔️ | Pages (About & Contact)      |
+| ✔️ | Advanced Product Page <ul><li>Variation change updates product stock and price information</li></ul>       |
+| ✔️ | Search Result / Empty search page |
+| ✔️ | Login / Registration / Forgot Password (Single page solution) |
+| ✔️ | My Account Page<br><ul><li>Order List with pagination and direct link to Order Detail.</li><li>Address Book full functionality covered here, no need for the user to go to a dedicated page.</li><ul><li>New Address Modal (modal using modern `<dialog>` native component)</li><li>Edit Address Modal, including change the default address.</li><li>Country + Province/State JS component added</li><li>Delete Address logic, with confirmation modal that triggers an Ajax call to the delete form and handles possible errors on the modal.</li></ul><li>Reset Password Ajax call logic + response notification of success, to provide better UX as Shopify doesn't allow users to directly change their password.</li></ul> |
+| ✔️ | Order Deails<br> <ul><li>Handled different cases of fullfilment, to not show the same tracking information on every product is they are all part of the same shipping.</li><li>If is a partial / multi shipping, each product has its own information./li></ul>  |
+| ✔ | Site fully responsive |
+| ⌛ | Code clean-up / general improvements |
+| ⌛ | Adding a 3D model on a Product in Shopify |
+| Maybe | Converting project to use JS modules / compiler, adding Vite |
+| Maybe | Home Page extra modules |
+| Maybe | Minicart |
+| Maybe | Convert some snippets and components to be more reusable globally (toast, modals...) |
 
-Status | Lectures
------------- | -------------
-:heavy_check_mark: | Installing Development Tools
-:heavy_check_mark: | Navigational Bar
-:heavy_check_mark: | 404 Page
-:heavy_check_mark: | Article Page
-:heavy_check_mark: | Blog Page
-:heavy_check_mark: | Cart Page
-:heavy_check_mark: | Product Collection Page
-:heavy_check_mark: | Collections Page
-:heavy_check_mark: | Homepage (Index)
-:heavy_check_mark: | Pages (About & Contact)
-:heavy_check_mark: | Advanced Product Page
-:heavy_check_mark: | Search Page
-:hourglass: | More lessons coming
-
-## How to use
-
-To use this repository for making Shopify themes, use the following command of Shopify CLI.
-```sh
-shopify theme init [ NAME OF YOUR THEME ] --clone-url https://github.com/polidario/Elizabeth_Clean
-```
-
-If you don't have Shopify CLI installed to your computer, navigate to the [installation page of Shopify CLI](https://shopify.dev/themes/tools/cli/installation).
-
-## Not a student
-
-If you're not a student, you can still use this repository to start a new Shopify theme project. However, any issues that you will encounter throughout your development will not be supported as the instructor will only answer questions through the course's QnA page.
