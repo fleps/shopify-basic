@@ -1,8 +1,15 @@
 /* Delete Address Actions */
-const delAddressConfirmation = ($dialog, addressId) => {
-  toggleSpinner($dialog.querySelector('.dialog-inner'), true);
+const delAddressConfirmation = (e) => {
+  const $confirmButton = e.target.closest('[data-confirm-delete]');
+  if (!$confirmButton) return;
 
+  const $dialog = $confirmButton.closest('[data-dialog=deleteAddress]');
+  if (!$dialog) return;
+
+  const addressId = $dialog.dataset.addressId;
   const formData = new FormData();
+
+  toggleSpinner($dialog.querySelector('.dialog-inner'), true);
   formData.append('_method', 'delete');
 
   fetch(`/account/addresses/${addressId}`, {
@@ -23,20 +30,16 @@ const delAddressConfirmation = ($dialog, addressId) => {
     });
 };
 
-const delAddressInit = ($dialog, addressId) => {
-  $dialog.querySelector('[data-confirm-delete]').addEventListener('click', () => {
-    delAddressConfirmation($dialog, addressId);
-  });
-};
+const openDeleteAddressConfirmation = (e) => {
+  const $button = e.target.closest('[data-delete-address]');
+  if (!$button) return;
 
-const delAddressTriggerAction = ($button) => {
-  $button.addEventListener('click', () => {
-    const addressId = $button.dataset.deleteAddress;
-    const $dialog = document.querySelector('[data-dialog=deleteAddress]');
+  const addressId = $button.dataset.deleteAddress;
+  const $dialog = document.querySelector('[data-dialog=deleteAddress]');
+  if (!$dialog) return;
 
-    $dialog.showModal();
-    delAddressInit($dialog, addressId);
-  });
+  $dialog.dataset.addressId = addressId;
+  $dialog.showModal();
 };
 
 /* Trigger reset password from My Account page via Ajax */
@@ -69,8 +72,6 @@ const resetPassword = (e) => {
 }
 
 /* Inits calls */
-document.querySelectorAll('[data-delete-address]').forEach(($button) => {
-  delAddressTriggerAction($button);
-});
-
+document.addEventListener('click', openDeleteAddressConfirmation);
+document.addEventListener('click', delAddressConfirmation);
 document.querySelector('[data-reset-password-for]').addEventListener('click', resetPassword);
