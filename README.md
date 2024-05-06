@@ -30,6 +30,7 @@ This project was created based on a Shopify Theme Development – Online Store 2
 | ✔ | Site fully responsive |
 | ⌛ | Code clean-up / general improvements |
 | ⌛ | Adding a 3D model on a Product in Shopify |
+| Maybe | Turn the Modal / Dialog into a global Class component with more reusability |
 | Maybe | Converting project to use JS modules / compiler, adding Vite |
 | Maybe | Home Page extra modules |
 | Maybe | Minicart |
