@@ -122,7 +122,15 @@
 
           {% comment %} Error toast - login and registration "share" the same form.errors, so this will serve both {% endcomment %}
           {% if form.errors %}
-            {% render 'toast', type: 'form', style: 'error', content: form.errors %}
+            {%- if request.path contains 'invalid_token' -%}
+              {% assign error_message = 'Invitation expired or declined. Request a new one or register below' %}
+              {% assign type = 'custom' %}
+            {% else %}
+              {%- assign error_message = form.errors -%}
+              {%- assign type = 'form' -%}
+            {%- endif -%}
+
+            {% render 'toast', type: type, style: 'error', content: error_message %}
           {% endif %}
         {% endform %}
       </div>

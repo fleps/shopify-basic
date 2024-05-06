@@ -1,0 +1,57 @@
+<div class='max-w-7xl p-5 container mx-auto'>
+  <h1 class='text-3xl mb-5 text-center'>Activate your Account</h1>
+
+  <div class='w-full md:w-1/2 mx-auto'>
+    <div class='bg-white flex flex-col border rounded-lg shadow-lg p-5'>
+      <p class='mb-5'>Create a password to activate your account.</p>
+
+      {% form 'activate_customer_password' %}
+        <div class='flex flex-col'>
+          <label class='text-grey-700 font-medium text-sm mb-1' for='customer_password'>Password *</label>
+          <input
+            class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-1'
+            type='password'
+            name='customer[password]'
+            id='customer_password'
+            placeholder='Type your new password'
+            required
+            autocomplete='new-password'
+            min='8'
+            pattern='(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=])[A-Za-z\d@$!%*?&]{8,}'
+            title='Must have 8 digits: at least 1 uppercase and lowercase letter, 1 special character and 1 number.'
+          >
+          <small class='text-zinc-400 mb-3'
+            >Must have 8 digits: at least 1 uppercase and lowercase letter, 1 special character and 1 number.</small
+          >
+
+          <label class='text-grey-700 font-medium text-sm mb-1' for='confirmation_password'
+            >Password Confirmation *</label
+          >
+          <input
+            class='w-full text-gray-700 border py-3 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:invalid:ring-red-500 required:valid:border-green-400 mb-3'
+            type='password'
+            name='customer[password_confirmation]'
+            id='confirmation_password'
+            placeholder='Confirm your new password'
+            required
+            autocomplete='new-password'
+            min='8'
+            pattern='(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=])[A-Za-z\d@$!%*?&]{8,}'
+            title='Must have 8 digits: at least 1 uppercase and lowercase letter, 1 special character and 1 number.'
+          >
+
+          <div class='flex gap-5'>
+            <button type='submit' class='mt-4 btn-primary'>Activate Account</button>
+            <button type='submit' formnovalidate data-decline-btn name='decline' class='mt-4 btn-secondary'>
+              Decline Invitation
+            </button>
+          </div>
+        </div>
+
+        {% if form.errors %}
+          {% render 'toast', type: 'form', style: 'error', content: form.errors %}
+        {% endif %}
+      {% endform %}
+    </div>
+  </div>
+</div>
