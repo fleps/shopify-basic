@@ -1,39 +1,40 @@
 /* Dialog default actions.
   Ideally this should be expanded to be more flexible (ajax methods, etc.)
 */
-const dialogTriggerAction = ($trigger) => {
+const dialogOpen = (e) => {
+  const $trigger = e.target.closest('[data-target-dialog]');
+  if (!$trigger) return;
+
   const $dialog = document.querySelector(`[data-dialog=${$trigger.dataset.targetDialog}]`);
+  if (!$dialog) return;
 
-  $trigger.addEventListener('click', () => {
-    $dialog.showModal();
-  });
+  $dialog.showModal();
 };
 
-const dialogCloseAction = ($dialog) => {
-  const dialogCloseBtn = $dialog.querySelectorAll('[data-dialog-close]');
+const dialogClose = (e) => {
+  const $dialogCloseBtn = e.target.closest('[data-dialog-close]');
+  if (!$dialogCloseBtn) return;
 
-  dialogCloseBtn.forEach(($button) => {
-    $button.addEventListener('click', () => {
-      $dialog.close();
+  const $dialog = $dialogCloseBtn.closest('.dialog-main');
+  if (!$dialog) return;
 
-      if ($dialog.dataset.dialog == 'newAddress') {
-        $dialog.querySelector('form').reset();
-      }
-    });
-  });
+  $dialog.close();
+
+  if ($dialog.dataset.dialog == 'newAddress') {
+    $dialog.querySelector('form').reset();
+  }
 };
 
-const dialogFormSubmitAction = ($dialog) => {
-  $dialog.querySelector('form')?.addEventListener('submit', (e) => {
-    toggleSpinner($dialog.querySelector('.dialog-inner'), true);
-  });
+const dialogFormSubmit = (e) => {
+  const $form = e.target.closest('form');
+  if (!$form) return;
+
+  const $dialog = $form.closest('.dialog-main');
+  if (!$dialog) return;
+
+  toggleSpinner($dialog.querySelector('.dialog-inner'), true);
 };
 
-document.querySelectorAll('[data-target-dialog]').forEach(($trigger) => {
-  dialogTriggerAction($trigger);
-});
-
-document.querySelectorAll('.dialog-main').forEach(($dialog) => {
-  dialogCloseAction($dialog);
-  dialogFormSubmitAction($dialog);
-});
+document.addEventListener('click', dialogOpen);
+document.addEventListener('click', dialogClose);
+document.addEventListener('submit', dialogFormSubmit);
