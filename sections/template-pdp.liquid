@@ -1,16 +1,30 @@
+{% comment %} TODO: this should be self-hosted {% endcomment %}
 <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css'>
 <script src='https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js' defer></script>
+<script src='{{ 'pdp.js' | asset_url }}' defer></script>
 
 <div class='max-w-7xl p-5 container mx-auto'>
   <div class='flex flex-wrap gap-4 relative'>
     <div class='product--medias w-screen max-md:-mx-5 md:w-1/2 lg:flex-1'>
       <div class='swiper select-none max-w-full'>
         <div class='swiper-wrapper'>
-          {% for media in product.media %}
+          {% if product.media != blank %}
+            {% for media in product.media %}
+              <div class='h-100 lg:h-auto overflow-hidden swiper-slide'>
+                {% render 'product-media', media: media %}
+              </div>
+            {% endfor %}
+          {% else %}
+            {%- liquid
+              assign min = 1
+              assign max = 6
+              assign diff = max | minus: min
+              assign randomNumber = 'now' | date: '%N' | modulo: diff | plus: min
+            -%}
             <div class='h-100 lg:h-auto overflow-hidden swiper-slide'>
-              {% render 'product-media', media: media %}
+              {{ randomNumber | prepend: 'product-' | placeholder_svg_tag: 'mb-2' }}
             </div>
-          {% endfor %}
+          {% endif %}
         </div>
         <div class='swiper-button-prev lg:!hidden'></div>
         <div class='swiper-button-next lg:!hidden'></div>
@@ -119,142 +133,6 @@
     </div>
   </div>
 </div>
-
-<style>
-  :root {
-    --swiper-theme-color: white;
-    --swiper-navigation-size: 30px;
-  }
-
-  @media (min-width: 1024px) {
-    .swiper-wrapper {
-      display: block;
-    }
-  }
-</style>
-
-<script>
-  /* TODO: move this to a dedicated JS file */
-  class VariantSelector extends HTMLElement {
-    constructor() {
-      super();
-      this.addEventListener('change', this.onVariantChange);
-      this.isReversed = this.dataset.isReversed === 'true';
-    }
-
-    onVariantChange() {
-      this.getSelectedOptions();
-      this.getSelectedVariant();
-
-      if (this.currentVariant) {
-        this.updateURL();
-        this.updateProductInput();
-        this.updatePrices();
-        this.updateAvailabilty();
-      }
-    }
-
-    getSelectedOptions() {
-      this.options = Array.from(this.querySelectorAll('select'), (select) => select.value);
-      if (this.isReversed) {
-        this.options = this.options.reverse();
-      }
-    }
-
-    getVariantJSON() {
-      this.variantsData = this.variantsData || JSON.parse(this.dataset.variants);
-      return this.variantsData;
-    }
-
-    getSelectedVariant() {
-      this.currentVariant = this.getVariantJSON().find((variant) => {
-        const items = !variant.options
-          .map((option, index, arr) => {
-            return this.options[index] === option;
-          })
-          .includes(false);
-
-        if (items) {
-          return variant;
-        }
-      });
-    }
-
-    updateURL() {
-      if (this.currentVariant) {
-        window.history.replaceState({}, '', `${this.dataset.url}?variant=${this.currentVariant.id}`);
-      }
-    }
-
-    updateProductInput() {
-      document.querySelector('.shopify-product-form').querySelector('input[name="id"]').value = this.currentVariant.id;
-    }
-
-    updatePrices() {
-      const $produtcInfo = document.querySelector('.product--content');
-      const $strikePriceEl = $produtcInfo.querySelector('#strike-price');
-      const $currentPriceEl = $produtcInfo.querySelector('#current-price');
-      const $saleBadgeEl = $produtcInfo.querySelector('#sale-badge');
-      const moneySymbol = $currentPriceEl.dataset.currencySymbol;
-
-      const compare_at_price = this.currentVariant.compare_at_price || false;
-      const price = this.currentVariant.price;
-      const isOnSale = compare_at_price && compare_at_price > price;
-      const newPrice = (parseInt(price) / 100).toFixed(2);
-
-      $currentPriceEl.textContent = moneySymbol + newPrice;
-
-      if (isOnSale) {
-        const newStrikePrice = (parseInt(compare_at_price) / 100).toFixed(2);
-        $strikePriceEl.textContent = moneySymbol + newStrikePrice;
-      }
-
-      [$strikePriceEl, $saleBadgeEl].forEach((el) => el.classList.toggle('hidden', !isOnSale));
-    }
-
-    updateAvailabilty() {
-      const isAvailable = this.currentVariant.available;
-      const $atc = document.querySelector('.product--content #AddToCart');
-      $atc.toggleAttribute('disabled', !isAvailable);
-      $atc.textContent = isAvailable ? 'Add To Cart' : 'Sold Out';
-    }
-  }
-  customElements.define('variant-selector', VariantSelector);
-</script>
-
-{% javascript %}
-  document.addEventListener('DOMContentLoaded', () => {
-    let swiper = Swiper;
-    let init = false;
-    let mq = window.matchMedia('(max-width: 1023px)');
-
-    const handleCarousel = () => {
-      let toShowSlider = mq.matches;
-
-      if (toShowSlider && !init) {
-        init = true;
-        swiper = new Swiper('.swiper', {
-          slidesPerView: 1,
-          loop: false,
-          direction: 'horizontal',
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-          },
-        });
-      } else if (init) {
-        swiper.destroy();
-        init = false;
-      }
-    };
-
-    handleCarousel();
-
-    mq.addEventListener('change', () => {
-      handleCarousel();
-    });
-  });
-{% endjavascript %}
 
 {% schema %}
 {
