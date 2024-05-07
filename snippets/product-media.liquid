@@ -1,6 +1,7 @@
 {% case media.media_type %}
   {% when 'image' %}
-    {{ media
+    {{
+      media
       | image_url: width: 852
       | image_tag:
         class: 'mb-2',
@@ -14,7 +15,39 @@
   {% when 'external_video' %}
     {{ media | external_video_tag: class: 'w-full aspect-video' }}
   {% when 'model' %}
-    {{ media | model_viewer_tag }}
+    <button class='relative' aria-label='Open 3D model' data-target-dialog='model-3D'>
+      {{
+        media
+        | image_url: width: 852
+        | image_tag: class: 'mb-2', sizes: '(min-width: 769px) 70vw, 100vw', widths: '375, 640, 768, 852, 1280'
+      }}
+      <span
+        class='absolute left-6 top-6 z-10 flex gap-1 py-1 px-2 text-white bg-orange-600 rounded-lg'
+        aria-hidden='true'
+      >
+        Open 3D Model {% render 'icon-3d' %}
+      </span>
+    </button>
+
+    <dialog class='dialog-main dialog-centered lg:max-w-[90vw] h-[90vh]' data-dialog='model-3D' hidden>
+      <div class='dialog-inner'>
+        <button class='dialog-close-btn' data-dialog-close>
+          {% render 'icon-close' %}
+        </button>
+        <div class='dialog-content [&>model-viewer]:h-full [&>model-viewer]:w-full'>
+          {{
+            media
+            | model_viewer_tag:
+              image_size: '852x',
+              reveal: 'manual',
+              camera-controls: '',
+              touch-action: 'pan-y',
+              autofocus: ''
+          }}
+        </div>
+      </div>
+    </dialog>
+
   {% else %}
     {{ media | media_tag }}
 {% endcase %}

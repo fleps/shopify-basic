@@ -75,6 +75,7 @@
   .dialog-main[open] {
     display: flex;
     opacity: 1;
+    overscroll-behavior: contain;
 
     &::backdrop {
       opacity: 1;
@@ -129,7 +130,8 @@
   }
 
   .dialog-content {
-    @apply overflow-auto max-h-full pl-7 pb-7 pr-6;
+    @apply overflow-auto max-h-full h-full pl-7 pb-7 pr-6;
+    overscroll-behavior: contain;
   }
 
   .dialog-close-btn {

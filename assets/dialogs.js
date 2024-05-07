@@ -9,6 +9,10 @@ const dialogOpen = (e) => {
   if (!$dialog) return;
 
   $dialog.showModal();
+
+  if ($dialog.dataset.dialog.includes('3D')) {
+    $dialog.querySelector('model-viewer')?.dismissPoster();
+  }
 };
 
 const dialogClose = (e) => {

@@ -759,6 +759,7 @@ input[type='checkbox'] {
 .dialog-main[open] {
   display: flex;
   opacity: 1;
+  overscroll-behavior: contain;
   &::backdrop {
     opacity: 1;
     -webkit-backdrop-filter: blur(5px);
@@ -809,11 +810,13 @@ input[type='checkbox'] {
 }
 
 .dialog-content {
+  height: 100%;
   max-height: 100%;
   overflow: auto;
   padding-left: 1.75rem;
   padding-bottom: 1.75rem;
   padding-right: 1.5rem;
+  overscroll-behavior: contain;
 }
 
 .dialog-close-btn {
@@ -960,6 +963,10 @@ input[type='checkbox'] {
   right: 0px;
 }
 
+.right-6 {
+  right: 1.5rem;
+}
+
 .top-0 {
   top: 0px;
 }
@@ -968,12 +975,20 @@ input[type='checkbox'] {
   top: 1.25rem;
 }
 
+.top-6 {
+  top: 1.5rem;
+}
+
 .top-\[1px\] {
   top: 1px;
 }
 
 .top-full {
   top: 100%;
+}
+
+.left-6 {
+  left: 1.5rem;
 }
 
 .z-10 {
@@ -1233,6 +1248,10 @@ input[type='checkbox'] {
   height: 14px;
 }
 
+.h-\[90vh\] {
+  height: 90vh;
+}
+
 .h-fit {
   height: -moz-fit-content;
   height: fit-content;
@@ -1448,6 +1467,10 @@ input[type='checkbox'] {
 
 .gap-5 {
   gap: 1.25rem;
+}
+
+.gap-1 {
+  gap: 0.25rem;
 }
 
 .gap-y-7 {
@@ -2520,6 +2543,10 @@ input[type='checkbox'] {
     width: 400px;
   }
 
+  .lg\:max-w-\[90vw\] {
+    max-width: 90vw;
+  }
+
   .lg\:flex-1 {
     flex: 1 1 0%;
   }
@@ -2539,6 +2566,14 @@ input[type='checkbox'] {
 
 .\[\&\:not\(\:first-of-type\)\]\:border-t:not(:first-of-type) {
   border-top-width: 1px;
+}
+
+.\[\&\>model-viewer\]\:h-full>model-viewer {
+  height: 100%;
+}
+
+.\[\&\>model-viewer\]\:w-full>model-viewer {
+  width: 100%;
 }
 
 .\[\&_li\]\:marker\:text-lime-600 * li::marker {
