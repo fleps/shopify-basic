@@ -1,6 +1,25 @@
 /* Dialog default actions.
   Ideally this should be expanded to be more flexible (ajax methods, etc.)
 */
+
+const dialogInitEvents = ($dialog) => {
+  /* Open Events */
+  if ($dialog.dataset.dialog.includes('3D')) {
+    $dialog.querySelector('model-viewer')?.dismissPoster();
+    document.body.classList.add('overflow-hidden');
+  }
+
+  /* Close Events */
+  /* The dialog close event fires when the user closes it (via a button or ESC), and doesn't bubble, so to listen to it, needs to be defined when the dialog is created/opened */
+  $dialog.addEventListener('close', () => {
+    document.body.classList.remove('overflow-hidden');
+
+    if ($dialog.dataset.dialog == 'newAddress') {
+      $dialog.querySelector('form').reset();
+    }
+  }, { once: true });
+}
+
 const dialogOpen = (e) => {
   const $trigger = e.target.closest('[data-target-dialog]');
   if (!$trigger) return;
@@ -9,13 +28,10 @@ const dialogOpen = (e) => {
   if (!$dialog) return;
 
   $dialog.showModal();
-
-  if ($dialog.dataset.dialog.includes('3D')) {
-    $dialog.querySelector('model-viewer')?.dismissPoster();
-  }
+  dialogInitEvents($dialog);
 };
 
-const dialogClose = (e) => {
+const dialogCloseTrigger = (e) => {
   const $dialogCloseBtn = e.target.closest('[data-dialog-close]');
   if (!$dialogCloseBtn) return;
 
@@ -23,10 +39,6 @@ const dialogClose = (e) => {
   if (!$dialog) return;
 
   $dialog.close();
-
-  if ($dialog.dataset.dialog == 'newAddress') {
-    $dialog.querySelector('form').reset();
-  }
 };
 
 const dialogFormSubmit = (e) => {
@@ -40,5 +52,5 @@ const dialogFormSubmit = (e) => {
 };
 
 document.addEventListener('click', dialogOpen);
-document.addEventListener('click', dialogClose);
+document.addEventListener('click', dialogCloseTrigger);
 document.addEventListener('submit', dialogFormSubmit);
