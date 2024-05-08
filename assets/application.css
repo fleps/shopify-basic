@@ -955,16 +955,16 @@ input[type='checkbox'] {
   left: 0px;
 }
 
+.left-6 {
+  left: 1.5rem;
+}
+
 .left-\[1px\] {
   left: 1px;
 }
 
 .right-0 {
   right: 0px;
-}
-
-.right-6 {
-  right: 1.5rem;
 }
 
 .top-0 {
@@ -987,8 +987,12 @@ input[type='checkbox'] {
   top: 100%;
 }
 
-.left-6 {
-  left: 1.5rem;
+.bottom-1 {
+  bottom: 0.25rem;
+}
+
+.right-1 {
+  right: 0.25rem;
 }
 
 .z-10 {
@@ -1453,6 +1457,10 @@ input[type='checkbox'] {
   justify-content: space-between;
 }
 
+.gap-1 {
+  gap: 0.25rem;
+}
+
 .gap-2 {
   gap: 0.5rem;
 }
@@ -1467,10 +1475,6 @@ input[type='checkbox'] {
 
 .gap-5 {
   gap: 1.25rem;
-}
-
-.gap-1 {
-  gap: 0.25rem;
 }
 
 .gap-y-7 {
