@@ -1,11 +1,8 @@
 <div class='max-w-7xl p-5 container mx-auto'>
   {% if cart.item_count > 0 %}
-
     <div class='flex items-end justify-between'>
       <h1 class='text-3xl'>Cart</h1>
-      <a href='{{ routes.all_products_collection_url }}' class='btn-primary'>
-        Continue Shopping
-      </a>
+      <a href='{{ routes.all_products_collection_url }}' class='btn-primary'> Continue Shopping </a>
     </div>
 
     <div class='flex flex-col my-10'>
@@ -20,17 +17,28 @@
             {% for item in cart.items %}
               <tr class='table-row'>
                 <td class='py-4 px-2 flex flex-wrap'>
-                  <a href="{{ item.url }}">
-                    {{ item.image | image_url: width: 100
-                      | image_tag:
-                        class: 'object-cover border mr-2',
-                        alt: item.title | escape
-                    }}
+                  <a href='{{ item.url }}'>
+                    {% if item.image != blank %}
+                      {{
+                        item.image
+                        | image_url: width: 100
+                        | image_tag: class: 'object-cover border mr-2', alt: item.title
+                        | escape
+                      }}
+                    {% else %}
+                      {%- liquid
+                        assign min = 1
+                        assign max = 6
+                        assign diff = max | minus: min
+                        assign randomNumber = 'now' | date: '%N' | modulo: diff | plus: min
+                      -%}
+                      {{ randomNumber | prepend: 'product-' | placeholder_svg_tag: 'w-[100px] border mr-2' }}
+                    {% endif %}
                   </a>
                   <div class='py-4 flex flex-col justify-center'>
-                    <a href="{{ item.url }}" class='font-medium'>{{ item.product.title }}</a>
+                    <a href='{{ item.url }}' class='font-medium'>{{ item.product.title }}</a>
                     <span class='text-sm text-gray-500 my-1'>{{ item.variant.title }}</span>
-                    <a href="{{ item.url_to_remove }}" class='text-sm text-red-500 font-medium'>remove</a>
+                    <a href='{{ item.url_to_remove }}' class='text-sm text-red-500 font-medium'>remove</a>
                   </div>
                 </td>
                 <td class='py-4 px-2 text-center'>
@@ -42,7 +50,7 @@
                     max='10'
                     class='w-14 border p-2'
                     id='updates_{{ item.key }}'
-                  />
+                  >
                 </td>
                 <td class='py-4 px-2 text-right font-medium'>
                   {% if item.original_line_price != item.line_price %}
@@ -60,13 +68,11 @@
 
         <div class='flex flex-col md:flex-row items-center justify-between'>
           <div class='w-full my-4'>
-            <label for='cart_notes' class='my-1 font-medium'>Cart Notes</label><br/>
+            <label for='cart_notes' class='my-1 font-medium'>Cart Notes</label><br>
             <textarea name='note' id='cart_notes' class='w-full md:max-w-lg border h-20'></textarea>
           </div>
           <div class='w-full my-4 md:w-80 text-right'>
-            <h3 class='text-xl'>
-              Subtotal: {{ cart.total_price | money }}
-            </h3>
+            <h3 class='text-xl'>Subtotal: {{ cart.total_price | money }}</h3>
             <div class='my-2'>
               {% for block in section.blocks %}
                 {% case block.type %}
@@ -78,16 +84,17 @@
                     >
                       Update
                     </button>
-                    {% when 'checkout_button' %}
-                      <button
-                        type='submit'
-                        name='checkout'
-                        class='w-100 btn-primary'
-                      >
-                        Checkout
-                      </button>
+                  {% when 'checkout_button' %}
+                    <button
+                      type='submit'
+                      name='checkout'
+                      class='w-100 btn-primary'
+                    >
+                      Checkout
+                    </button>
 
                   {% else %}
+
                 {% endcase %}
               {% endfor %}
             </div>
@@ -97,15 +104,16 @@
     </div>
 
   {% else %}
-
     <div class='text-center'>
       <h1 class='text-3xl'>Cart</h1>
       <p class='py-8'>You Cart is empty!</p>
-      <a href='{{ routes.all_products_collection_url }}' class='px-4 py-2 rounded-lg inline-block text-base font-medium shadow bg-orange-600 text-white hover:bg-orange-700'>
+      <a
+        href='{{ routes.all_products_collection_url }}'
+        class='px-4 py-2 rounded-lg inline-block text-base font-medium shadow bg-orange-600 text-white hover:bg-orange-700'
+      >
         Go Shopping
       </a>
     </div>
-
   {% endif %}
 </div>
 
@@ -124,8 +132,6 @@
       "limit": 1
     }
   ],
-  "settings": [
-
-    ]
+  "settings": []
 }
 {% endschema %}

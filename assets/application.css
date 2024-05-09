@@ -947,6 +947,10 @@ input[type='checkbox'] {
   top: -50%;
 }
 
+.bottom-1 {
+  bottom: 0.25rem;
+}
+
 .bottom-\[1px\] {
   bottom: 1px;
 }
@@ -967,6 +971,10 @@ input[type='checkbox'] {
   right: 0px;
 }
 
+.right-1 {
+  right: 0.25rem;
+}
+
 .top-0 {
   top: 0px;
 }
@@ -985,14 +993,6 @@ input[type='checkbox'] {
 
 .top-full {
   top: 100%;
-}
-
-.bottom-1 {
-  bottom: 0.25rem;
-}
-
-.right-1 {
-  right: 0.25rem;
 }
 
 .z-10 {
@@ -1320,6 +1320,10 @@ input[type='checkbox'] {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-\[100px\] {
+  width: 100px;
 }
 
 .min-w-max {
