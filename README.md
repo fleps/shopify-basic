@@ -26,7 +26,7 @@ This project was created based on a Shopify Theme Development – Online Store 2
 | ✔️ | Search Result / Empty search page |
 | ✔️ | Login / Registration / Forgot Password (Single page solution) |
 | ✔️ | My Account Page<br><ul><li>Order List with pagination and direct link to Order Detail.</li><li>Address Book full functionality covered here, no need for the user to go to a dedicated page.</li><ul><li>New Address Modal (modal using modern `<dialog>` native component)</li><li>Edit Address Modal, including change the default address.</li><li>Country + Province/State JS component added</li><li>Delete Address logic, with confirmation modal that triggers an Ajax call to the delete form and handles possible errors on the modal.</li></ul><li>Reset Password Ajax call logic + response notification of success, to provide better UX as Shopify doesn't allow users to directly change their password.</li></ul> |
-| ✔️ | Order Deails<br> <ul><li>Handled different cases of fullfilment, to not show the same tracking information on every product if they are all part of the same shipping.</li><li>If is a partial / multi shipping, each product has its own information./li></ul>  |
+| ✔️ | Order Deails<br> <ul><li>Handled different cases of fullfilment, to not show the same tracking information on every product if they are all part of the same shipping.</li><li>If is a partial / multi shipping, each product has its own information.</li></ul>  |
 | ✔ | Site fully responsive |
 | ✔ | Code clean-up / general improvements |
 | ✔ | Adding a 3D model on a Product in Shopify |
