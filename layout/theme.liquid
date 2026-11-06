@@ -29,7 +29,7 @@
     {{ content_for_header }}
     <!-- Header hook for plugins -->
     {{ 'application.css' | asset_url | stylesheet_tag: preload: true }}
-    {{ 'application.js' | asset_url | script_tag defer }}
+    {{ 'application.js' | asset_url | script_tag }}
     <script defer src='https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js'></script>
     <script defer src='https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js'></script>
   </head>
@@ -44,3 +44,13 @@
     </main>
   </body>
 </html>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{{ 'application.js' | asset_url | script_tag defer }}"
+  to: "{{ 'application.js' | asset_url | script_tag }}"
+  position: 1352..1399
+{% endcomment %}

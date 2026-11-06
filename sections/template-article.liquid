@@ -21,7 +21,7 @@
               fetchpriority: 'high'
           }}
         {% endif %}
-      {% when 'article_info', %}
+      {% when 'article_info' %}
         {% render 'article-info', section: section, article: article %}
       {% when 'article_content' %}
         <div class='py-5'>
@@ -173,3 +173,13 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% when 'article_info', %}"
+  to: "{% when 'article_info' %}"
+  position: 836..861
+{% endcomment %}
